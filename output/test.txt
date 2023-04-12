@@ -1,8 +1,6 @@
--------------------------------------------------------------------------------------------------------
-| Nom		     | Prenom		  | Apogee | Date d'insciption | Formation | Redoublant |  G-TD | Note |
-|----------------|----------------|--------|-------------------|-----------|------------|-------|------|
-|imran           |boutadghart     |1027945 | 1/Decembre/2000   |inf        |------------| Grp 9 |nan|
-|youssef         |ke3ke3          |1029634 | 2/Decembre/2000   |inf        |------------| Grp 9 |nan|
-|bruhh           |alo alo         |1029436 | 3/Decembre/2000   |inf        |------------| Grp 9 |nan|
-|testo           |boutadghart     |1029445 |26/Decembre/2000   |inf        |------------| Grp 9 |nan|
-|testo           |boutadghart     |1029496 |16/Decembre/2000   |inf        |------------| Grp 9 |nan|
+----------------------------------------------------------------------------------------------------------------------
+| Nom		     | Prenom		  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
+|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
+|imran           |boutadghart     |1831200 | 11/Novembre /2018 |  SMI   |    lmd       | ~~~~~~~~~~ | Grp5 |  0.000  |
+|youssef         |ke3ke3          |1731360 | 10/Octobre  /2017 |  SMA   |    master    | Redoublant | Grp4 |  0.000  |
+|khalid          |mokhlwid        |1531576 | 8 /Fevrier  /2015 |  SMIA  |    doctorat  | ~~~~~~~~~~ | Grp5 |  0.000  |

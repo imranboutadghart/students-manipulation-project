@@ -17,6 +17,8 @@ typedef struct Date
 const char* nomMois[] = {"","Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"};
 // Affiche le nom de la filiere
 const char* Filieres[] = {"","SMPC","SMC","SMP","STU","SV","SVTU","SMIA","SMA","SMI"};
+//affichage du formation
+const char* formation[] = {"","lmd", "master", "doctorat"};
 
 // Definition de structure etudiant
 typedef struct Etudiant{
@@ -24,7 +26,7 @@ unsigned int numApogee;
 char *nom;
 char *prenom;
 Date date_inscription;
-char formation[3];
+short int formation;
 Bool redoublant;
 short filiere;
 short G_TD;
@@ -76,13 +78,6 @@ void lireDate(Date *date){
     date->annee=y;
 }
 
-// Sasie de la filiere de l'etudiant
-void FiliereEtudiant(Etudiant *etud){
-    printf("\033[0;33m+ Saisir la filiere de l'etudiant: \n");
-    printf("+ 1:SMPC\n+ 2:SMC\n+ 3:SMP\n+ 4:STU\n+ 5:SV\n+ 6:SVTU\n+ 7:SMIA\n+ 8:SMA\n+ 9:SMI\n");
-    printf("+ \033[0;32m=>");
-    scanf("%hd",&etud->filiere);
-}
 
 // Generer une sequence de nombre aleatoire de 7 chiffres
 int NombreAleatoire_7(int year) {
@@ -98,6 +93,14 @@ int NombreAleatoire_7(int year) {
 // Recuperer les 2 derniers chiffres de l'annee 
 int DateChiffre_2(Etudiant* etudiant) {
     return etudiant->date_inscription.annee % 100;
+}
+
+// Sasie de la filiere de l'etudiant
+void FiliereEtudiant(Etudiant *etud){
+    printf("\033[0;33m+ Saisir la filiere de l'etudiant: \n");
+    printf("+ 1: SMPC\n+ 2: SMC\n+ 3: SMP\n+ 4: STU\n+ 5: SV\n+ 6: SVTU\n+ 7: SMIA\n+ 8: SMA\n+ 9: SMI\n");
+    printf("+ \033[0;32m=>");
+    scanf("%hd",&etud->filiere);
 }
 
 // Lire les donnees de l'etudiant
@@ -117,8 +120,12 @@ void LireEtudiant(Etudiant *etud){
     FiliereEtudiant(etud);
     int random = NombreAleatoire_7(DateChiffre_2(etud));
     etud->numApogee = random; // Generer un numero d'appogee de 7 chiffres (2 premiers font reference a l'annee de l'inscription)
-    printf("\033[0;33m+ Saisir la formation de l'etudiant (3 lettres) : \033[0;32m");
-    scanf(" %3[^\n]s",etud->formation);
+    
+    do{
+    printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: lmd\n+ 2: master\n+ 3: doctorat : \033[0;32m");
+    scanf(" %hd",&etud->formation);
+    }while(etud->formation<1 && etud->formation >3);
+
     printf("\033[0;33m+ Est-ce-que l'etudiant est un redoublant?(O/N): \033[0;32m");
     lireBool(&etud->redoublant);
     printf("\033[0;33m+ Saisir le groupe de TD :\033[0;32m");
@@ -189,8 +196,12 @@ void EditEtudiant(Etudiant *etud){
         FiliereEtudiant(etud);
         break;
     case 5:
-        printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant :(3 lettres)\033[0;32m\n");
-        scanf(" %3[^\n]s",etud->formation);
+    
+        do{
+        printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: lmd\n+ 2: master\n+ 3: doctorat : \033[0;32m");
+        scanf(" %hd",&etud->formation);
+        }while(etud->formation<1 && etud->formation >3);
+
         break;
     
     case 6:
@@ -217,18 +228,18 @@ void TabHeader(FILE *fichier)
     fseek(fichier,0,SEEK_END);
     if (ftell(fichier) == 0) // Tester si le fichier est vide
     {
-        fprintf(fichier,"-------------------------------------------------------------------------------------------------------------------\n");
-        fprintf(fichier,"| Nom\t\t     | Prenom\t\t  | Apogee | Date d'insciption | Filere | Formation | Redoublant | G-TD | Moyenne |\n");
-        fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|-----------|------------|------|---------|\n");
+        fprintf(fichier,"----------------------------------------------------------------------------------------------------------------------\n");
+        fprintf(fichier,"| Nom\t\t     | Prenom\t\t  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |\n");
+        fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
     }
 }
 
 // Afficher l'entete du tableau sur la console
 void AfficheTabHeader()
 {
-    printf("-------------------------------------------------------------------------------------------------------------------\n");
-    printf("| Nom\t\t | Prenom\t  | Apogee | Date d'insciption | Filiere| Formation | Redoublant | G-TD | Moyenne |\n");
-    printf("|----------------|----------------|--------|-------------------|--------|-----------|------------|------|---------|\n");
+    printf("----------------------------------------------------------------------------------------------------------------------\n");
+    printf("| Nom\t\t | Prenom\t  | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne |\n");
+    printf("|----------------|----------------|--------|-------------------|-----------|-----------|------------|------|---------|\n");
 }
 
 // Sauvegarder les donnees de l'etudiant dans un fichier externe
@@ -239,7 +250,7 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
     fprintf(fichier,"|%-7i ", etud.numApogee);
     fprintf(fichier,"| %-2hd/%-9s/%-5hd", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
     fprintf(fichier,"|  %-6s",Filieres[etud.filiere]);
-    fprintf(fichier,"|    %-7s",etud.formation);
+    fprintf(fichier,"|    %-10s",formation[etud.formation]);
     if (etud.redoublant == vrai){
     fprintf(fichier,"| Redoublant ");
     }
@@ -248,7 +259,7 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
     }
     fprintf(fichier,"| Grp%-1hu ",etud.G_TD);
     fprintf(fichier,"|");
-    fprintf(fichier," %2.3f  ",etud.moyenne);
+    fprintf(fichier,"  %2.3f  ",etud.moyenne);
     fprintf(fichier,"|\n");
 }
 
@@ -260,7 +271,7 @@ void AfficheEtudiant(Etudiant etud){
     printf("+-Numero d'apogee: \033[0;32m%-7i\033[0;33m\n", etud.numApogee);
     printf("+-Date d'inscription : \033[0;32m%hu/%s/%hu\033[0;33m\n", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
     printf("+-Filiere : \033[0;32m%s\033[0;33m\n",Filieres[etud.filiere]);
-    printf("+-Niveau de formation : \033[0;32m%s \033[0;33m\n",etud.formation);
+    printf("+-Niveau de formation : \033[0;32m%s \033[0;33m\n",formation[etud.formation]);
     if (etud.redoublant == vrai){
     printf("+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");
     }
@@ -384,18 +395,18 @@ int* RechercheEtudiant_Nom_Prenom(FILE *fp){
     return array;
 }
 
+
 // Programme principal de test
 int main(){
     Etudiant student;
     FILE *fichier = NULL;
     fichier = fopen("test.txt","a+");
-    int *array = RechercheEtudiant_Nom_Prenom(fichier);
-    AfficheTabLignes(fichier, array);
     TabHeader(fichier);
     LireEtudiant(&student);
-    AjouteNote(&student);
-    AfficheEtudiant(student);
-    EditEtudiant(&student);
+    SauvegardeEtudiant(student,fichier);
+    LireEtudiant(&student);
+    SauvegardeEtudiant(student,fichier);
+    LireEtudiant(&student);
     SauvegardeEtudiant(student,fichier);
     fclose(fichier);
     printf("\033[0;37m");
