@@ -18,7 +18,7 @@ const char* nomMois[] = {"","Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin"
 // Affiche le nom de la filiere
 const char* Filieres[] = {"","SMPC","SMC","SMP","STU","SV","SVTU","SMIA","SMA","SMI"};
 //affichage du formation
-const char* formation[] = {"","lmd", "master", "doctorat"};
+const char* Formations[] = {"","License", "Master", "Doctorat"};
 
 // Definition de structure etudiant
 typedef struct Etudiant{
@@ -51,19 +51,26 @@ void ClearConsole(int n)
     system("clear");
 }
 
+// Message d'erreur
+void Erreur(int err)
+{
+    if (err == 0){printf("+-\033[0;31mErreur: Mal saisie de donnesi!\033[0;33m\n");}
+    
+}
 // Lire une booleenne (o-O/n-N)
 void lireBool(Bool *bool){
     char tmp;
     do
     {
-    scanf("%c", &tmp);
-    if (tmp == 'o' || tmp == 'O')
-    {
-        *bool = vrai;
-    }else if (tmp == 'n' || tmp == 'N')
-    {
-        *bool = faux;
-    }
+        scanf("%c", &tmp);
+        if (tmp == 'o' || tmp == 'O')
+        {
+            *bool = vrai;
+        }
+        else if (tmp == 'n' || tmp == 'N')
+        {
+            *bool = faux;
+        }
     } while (!(tmp == 'o' || tmp == 'O' || tmp == 'n' || tmp == 'N'));
 }
 
@@ -90,10 +97,6 @@ int NombreAleatoire_7(int year) {
     return num;
 }
 
-// Recuperer les 2 derniers chiffres de l'annee 
-int DateChiffre_2(Etudiant* etudiant) {
-    return etudiant->date_inscription.annee % 100;
-}
 
 // Sasie de la filiere de l'etudiant
 void FiliereEtudiant(Etudiant *etud){
@@ -118,14 +121,12 @@ void LireEtudiant(Etudiant *etud){
     printf("\033[0;33m+ Saisir la date d'inscription de l'etudiant (jj mm aa) : \033[0;32m");
     lireDate(&etud->date_inscription);
     FiliereEtudiant(etud);
-    int random = NombreAleatoire_7(DateChiffre_2(etud));
+    int random = NombreAleatoire_7(etud->date_inscription.annee % 100);
     etud->numApogee = random; // Generer un numero d'appogee de 7 chiffres (2 premiers font reference a l'annee de l'inscription)
-    
     do{
-    printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: lmd\n+ 2: master\n+ 3: doctorat : \033[0;32m");
+    printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: License\n+ 2: Master\n+ 3: Doctorat : \033[0;32m");
     scanf(" %hd",&etud->formation);
     }while(etud->formation<1 && etud->formation >3);
-
     printf("\033[0;33m+ Est-ce-que l'etudiant est un redoublant?(O/N): \033[0;32m");
     lireBool(&etud->redoublant);
     printf("\033[0;33m+ Saisir le groupe de TD :\033[0;32m");
@@ -232,6 +233,7 @@ void TabHeader(FILE *fichier)
         fprintf(fichier,"| Nom\t\t     | Prenom\t\t  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |\n");
         fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
     }
+    fseek(fichier,0,SEEK_END);
 }
 
 // Afficher l'entete du tableau sur la console
@@ -248,16 +250,16 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
     fprintf(fichier,"|%-16.*s", 16, etud.nom);
     fprintf(fichier,"|%-16.*s", 16, etud.prenom);
     fprintf(fichier,"|%-7i ", etud.numApogee);
-    fprintf(fichier,"| %-2hd/%-9s/%-5hd", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
+    fprintf(fichier,"| %2hd/%-9s/%-5hd", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
     fprintf(fichier,"|  %-6s",Filieres[etud.filiere]);
-    fprintf(fichier,"|    %-10s",formation[etud.formation]);
+    fprintf(fichier,"|    %-10s",Formations[etud.formation]);
     if (etud.redoublant == vrai){
     fprintf(fichier,"| Redoublant ");
     }
     else{
-    fprintf(fichier,"| ~~~~~~~~~~ ");
+    fprintf(fichier,"| ~~~~ ");
     }
-    fprintf(fichier,"| Grp%-1hu ",etud.G_TD);
+    fprintf(fichier,"| Grp%-2hu",etud.G_TD);
     fprintf(fichier,"|");
     fprintf(fichier,"  %2.3f  ",etud.moyenne);
     fprintf(fichier,"|\n");
@@ -271,18 +273,15 @@ void AfficheEtudiant(Etudiant etud){
     printf("+-Numero d'apogee: \033[0;32m%-7i\033[0;33m\n", etud.numApogee);
     printf("+-Date d'inscription : \033[0;32m%hu/%s/%hu\033[0;33m\n", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
     printf("+-Filiere : \033[0;32m%s\033[0;33m\n",Filieres[etud.filiere]);
-    printf("+-Niveau de formation : \033[0;32m%s \033[0;33m\n",formation[etud.formation]);
-    if (etud.redoublant == vrai){
-    printf("+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");
-    }
-    else{
-    printf("+-L'etduiant \033[0;32mn'est pas un redoublant.\033[0;33m\n");
-    }
+    printf("+-Niveau de formation : \033[0;32m%s \033[0;33m\n",Formations[etud.formation]);
+    if (etud.redoublant == 0){printf("+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");}
+    else{printf("+-L'etduiant \033[0;32mn'est pas un redoublant.\033[0;33m\n");}
     printf("+-Groupe de TD : \033[0;32m%d\033[0;33m\n",etud.G_TD);
     printf("+-Les notes de l'etudiant :\033[0;32m");
     for (int i = 0; i < etud.nbnotes; i++){
     printf("\t%.3f",etud.notes[i]);
     }
+    printf("\033[0;33m\n+-La moyenne de l'etudiant :\033[0;32m%f",etud.moyenne);
     printf("\033[0;33m\n");
 }
 
@@ -395,6 +394,55 @@ int* RechercheEtudiant_Nom_Prenom(FILE *fp){
     return array;
 }
 
+// Lire un etudiant a partir du fichier
+Etudiant lireEtudiantFichier(FILE* fichier ,int line) {
+    Etudiant etud;
+    char mois[10];
+    char filiere[5];
+    char formation_[10];
+    char redoublant[11];
+    etud.nbnotes = 0;
+    etud.prenom = (char*)malloc(MAX_CARACTERE * sizeof(char));
+    etud.nom = (char*)malloc(MAX_CARACTERE * sizeof(char));
+    // Mise du curseur au debut de la ligne convenable
+    fseek(fichier,line,SEEK_SET);
+    // Lecture des donnees a partir du tableau
+    fscanf(fichier,"|%16[^|]|%16[^|]|%7d |%2hu/%10s /%4hu |%s |%s |%s | Grp%2hu |%f|", etud.nom, etud.prenom,&etud.numApogee,&etud.date_inscription.jour,mois,&etud.date_inscription.annee,filiere,formation_,redoublant,&etud.G_TD,&etud.moyenne);
+    // Association de la chaine de caractere lise au champ convenable (mois,filiere,formation,redoublant)
+    for (int i = 1; i < 13; i++)
+    {
+        if (strcmp(mois,nomMois[i]) == 0)
+        {
+            etud.date_inscription.mois = i;
+        }
+    }
+    for (int i = 1; i < 10; i++)
+    {
+        if (strcmp(filiere,Filieres[i]) == 0)
+        {
+            etud.filiere = i;
+        }
+    }
+    for (int i = 1; i < 4; i++)
+    {
+        if (strcmp(formation_,Formations[i]) == 0)
+        {
+            etud.formation = i;
+        }
+    }
+    if (strcmp(redoublant,"Redoublant") == 0)
+    {
+        etud.redoublant = 0;
+    }
+    else
+    {
+        etud.redoublant = 1;
+    }
+    // Debugging purposes
+    printf("%s\n",redoublant);
+    printf("%hu\n",etud.redoublant);
+    return etud;
+}
 
 // Programme principal de test
 int main(){
@@ -402,12 +450,16 @@ int main(){
     FILE *fichier = NULL;
     fichier = fopen("test.txt","a+");
     TabHeader(fichier);
-    LireEtudiant(&student);
-    SauvegardeEtudiant(student,fichier);
-    LireEtudiant(&student);
-    SauvegardeEtudiant(student,fichier);
-    LireEtudiant(&student);
-    SauvegardeEtudiant(student,fichier);
+    
+    // student = lireEtudiantFichier(fichier,466);
+    // AfficheEtudiant(student);
+    
+    for (int i = 0; i < 2; i++)
+    {
+        LireEtudiant(&student);
+        SauvegardeEtudiant(student,fichier);
+    }
+    
     fclose(fichier);
     printf("\033[0;37m");
     return 0;
