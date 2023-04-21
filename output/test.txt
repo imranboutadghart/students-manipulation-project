@@ -4,4 +4,9 @@
 |imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
 |youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
 |Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|amina           |petite          |1027859 |  9/Octobre  /2010 |  SMPC  |    License   | ~~~~~~~~~~ | Grp3 |  0.000  |
+|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
+|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
+|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |

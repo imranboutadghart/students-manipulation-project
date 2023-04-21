@@ -367,18 +367,18 @@ int* NombrePositionLigne(FILE *fichier){
 // Afficher une ligne a partir de sa position
 void AfficheLigne(FILE *file,int linePos){
     fseek(file,linePos,SEEK_SET);
-    char student[MAX_CARACTERE];
-    fgets(student,MAX_CARACTERE,file);
-    printf("%s",student);
+    char line[MAX_CARACTERE];
+    fgets(line,MAX_CARACTERE,file);
+    printf("%s",line);
 }
 
 // Afficher un tableau de lignes (Premier element du tableau est sa taille)
-void AfficheTabLignes(FILE *file,int *array){
+void AfficheTabLignes(FILE *file,int *NPL){
     ClearConsole(2);
     AfficheTabHeader();
-    for (int i = 1; i <= array[0]; i++)//first element of array is size of array
+    for (int i = 3; i <= NPL[0]; i++)//first element of NPL is size of NPL
     {
-        AfficheLigne(file, array[i]);
+        AfficheLigne(file, NPL[i]);
     }
     printf("----------------------------------------------------------------------------------------------------------\n");
 }
@@ -460,19 +460,26 @@ Etudiant lireEtudiantFichier(FILE* fichier ,int line) {
     }
     // Calcul du numero de la ligne apartir de la position du curseur
     etud.line = ((line - 347)/119)+4;
-    printf("%d\n",etud.line);
     return etud;
 }
 
 
 Etudiant *tabEtudiants(FILE *fichier, int *NPL){ // NPL nummberAndPositionOfLines
     Etudiant *tab =(Etudiant *)malloc(NPL[0]*sizeof(Etudiant));
-    for (int i = 2; i < NPL[0]; i++)
+    for (int i = 3; i <= NPL[0]; i++)
     {
-        tab[i-2] = lireEtudiantFichier(fichier, NPL[i+1]);
-        tab[i-2].line = i+1;
+        tab[i-3] = lireEtudiantFichier(fichier, NPL[i]);
+        tab[i-3].line = i;
     }
     return tab;
+}
+
+void afficheTabEtudiants(Etudiant *tab,int size){
+    for (int i = 0; i < size; i++)
+    {
+        AfficheEtudiant(tab[i]);
+    }
+    
 }
 
 FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
@@ -516,7 +523,6 @@ void trierTabEtudiantsParNom(Etudiant *tab, int size){
     }
     
 }
-
 void trierTabEtudiantsParPreom(Etudiant *tab, int size){
     Etudiant tmp;
     for (int i = 0; i < size; i++)
@@ -606,61 +612,69 @@ void trierTabEtudiantsParDate(Etudiant *tab, int size){
 }
 
 
-Etudiant *filtrerEtudiantsFiliere(Etudiant *tab,int size,int filiere){
-    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+int filtrerEtudiantsFiliere(Etudiant *originalTab,int originalTabSize,int filiere,Etudiant **destinationTabPtr){
+    Etudiant *destinationTab = NULL;
     int index=0;
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < originalTabSize; ++i)
     {
-        if (tab[i].filiere == filiere)
+        if (originalTab[i].filiere == filiere)
         {
-            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
-            tabfiltre[index] = tab[i];
+
+            destinationTab = realloc(destinationTab,(index+1)* sizeof(Etudiant));
+            destinationTab[index] = originalTab[i];
             index++;
         }
     }
-    return tabfiltre;
+    *destinationTabPtr = destinationTab;
+    return index;
 }
-Etudiant *filtrerEtudiantsFormation(Etudiant *tab,int size,int formation){
-    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+int filtrerEtudiantsFormation(Etudiant *originalTab,int originalTabSize,int formation,Etudiant **destinationTabPtr){
+    Etudiant *destinationTab = NULL;
     int index=0;
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < originalTabSize; ++i)
     {
-        if (tab[i].formation == formation)
+        if (originalTab[i].formation == formation)
         {
-            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
-            tabfiltre[index] = tab[i];
+
+            destinationTab = realloc(destinationTab,(index+1)* sizeof(Etudiant));
+            destinationTab[index] = originalTab[i];
             index++;
         }
     }
-    return tabfiltre;
+    *destinationTabPtr = destinationTab;
+    return index;
 }
-Etudiant *filtrerEtudiantsRedoublant(Etudiant *tab,int size,Bool redoublant){
-    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+int filtrerEtudiantsRedoublant(Etudiant *originalTab,int originalTabSize,int redoublant,Etudiant **destinationTabPtr){
+    Etudiant *destinationTab = NULL;
     int index=0;
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < originalTabSize; ++i)
     {
-        if (tab[i].redoublant == redoublant)
+        if (originalTab[i].redoublant == redoublant)
         {
-            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
-            tabfiltre[index] = tab[i];
+
+            destinationTab = realloc(destinationTab,(index+1)* sizeof(Etudiant));
+            destinationTab[index] = originalTab[i];
             index++;
         }
     }
-    return tabfiltre;
+    *destinationTabPtr = destinationTab;
+    return index;
 }
-Etudiant *filtrerEtudiantsGtd(Etudiant *tab,int size,int G_TD){
-    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+int filtrerEtudiantsG_TD(Etudiant *originalTab,int originalTabSize,int G_TD,Etudiant **destinationTabPtr){
+    Etudiant *destinationTab = NULL;
     int index=0;
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < originalTabSize; ++i)
     {
-        if (tab[i].G_TD == G_TD)
+        if (originalTab[i].G_TD == G_TD)
         {
-            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
-            tabfiltre[index] = tab[i];
+
+            destinationTab = realloc(destinationTab,(index+1)* sizeof(Etudiant));
+            destinationTab[index] = originalTab[i];
             index++;
         }
     }
-    return tabfiltre;
+    *destinationTabPtr = destinationTab;
+    return index;
 }
 
 
@@ -670,18 +684,12 @@ int main()
     FILE *fichier = NULL;
     fichier = fopen("test.txt", "r+");
     int *NPL = NombrePositionLigne(fichier);
-    Etudiant *tab = tabEtudiants(fichier,NPL);
-    for (int i = 0; i < NPL[0] - 2; i++)
-    {
-        printf("%s:",tab[i].nom);
-        printf("%d\n",tab[i].date_inscription.annee);
-    }
-    Etudiant *tab2 = filtrerEtudiantsFormation(tab,4,2);
-    for (int i = 0; i < NPL[0] - 2; i++)
-    {
-        printf("%s:",tab[i].nom);
-        printf("%d\n",tab[i].date_inscription.jour);
-    }
+    Etudiant *tab = tabEtudiants(fichier, NPL);
+    int tabsize = NPL[0] - 2;
+    Etudiant *tab2 = NULL;
+    int tab2Size = filtrerEtudiantsFiliere(tab,tabsize,8,&tab2);
+    afficheTabEtudiants(tab2,tab2Size);
+    
 
     fclose(fichier);
     printf("\033[0;37m");
