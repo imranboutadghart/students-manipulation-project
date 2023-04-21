@@ -257,7 +257,7 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
     fprintf(fichier,"| Redoublant ");
     }
     else{
-    fprintf(fichier,"| ~~~~ ");
+    fprintf(fichier,"| ~~~~~~~~~~ ");
     }
     fprintf(fichier,"| Grp%-2hu",etud.G_TD);
     fprintf(fichier,"|");
