@@ -22,6 +22,7 @@ const char* Formations[] = {"","License", "Master", "Doctorat"};
 
 // Definition de structure etudiant
 typedef struct Etudiant{
+int line;
 unsigned int numApogee;
 char *nom;
 char *prenom;
@@ -321,24 +322,25 @@ void AjouteNote(Etudiant *etud){
 }
 
 // Position du premier characteres pour chaque ligne pour des raisons d'affichage
-int* NombrePositionLigne(FILE *fp){
-    int size=5, *array = (int *)malloc(size*sizeof(int)), lineCount=1,i=1;
+int* NombrePositionLigne(FILE *fichier){
+    rewind(fichier);
+    int size=5, *array = (int *)malloc(size*sizeof(int)), lineCount=0;
     char *line = (char *)malloc(MAX_CARACTERE*sizeof(char));
     if (line == NULL)
     {
         printf("\033[0;31m+ Erreur d'allocation en memoire!\n\033[0;37m");
         return NULL;
     }
-    while (fgets(line,MAX_CARACTERE,fp) != NULL)
+    while (fgets(line,MAX_CARACTERE,fichier) != NULL)
     {    
-        if (lineCount % 5 == 0)
+        if (lineCount % 5 == 4)
         {
             size +=5;
             array = realloc(array,size*sizeof(int));
         }
         lineCount++;
-        array[i] = ftell(fp);
-        i++;
+        array[lineCount] = ftell(fichier);
+        
     }
     array[0]=lineCount-1;
     free(line);
@@ -438,28 +440,230 @@ Etudiant lireEtudiantFichier(FILE* fichier ,int line) {
     {
         etud.redoublant = 1;
     }
-    // Debugging purposes
-    printf("%s\n",redoublant);
-    printf("%hu\n",etud.redoublant);
     return etud;
 }
 
-// Programme principal de test
-int main(){
-    Etudiant student;
-    FILE *fichier = NULL;
-    fichier = fopen("test.txt","a+");
-    TabHeader(fichier);
-    
-    // student = lireEtudiantFichier(fichier,466);
-    // AfficheEtudiant(student);
-    
-    for (int i = 0; i < 2; i++)
+
+Etudiant *tabEtudiants(FILE *fichier, int *NPL){//NPL nummberAndPositionOfLines
+    Etudiant *tab =(Etudiant *)malloc(NPL[0]*sizeof(Etudiant));
+    for (int i = 2; i < NPL[0]; i++)
     {
-        LireEtudiant(&student);
-        SauvegardeEtudiant(student,fichier);
+        tab[i-2] = lireEtudiantFichier(fichier, NPL[i+1]);
+        tab[i-2].line = i+1;
+    }
+    return tab;
+}
+
+FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
+    int lineToDelete = etud.line;
+    FILE *tmp = fopen("tmp.txt","w+");
+    rewind(fichier);
+    int count = 1;
+    char ch;
+    while ((ch = fgetc(fichier)) != EOF) {
+        if (ch == '\n') {
+            count++;
+        }
+        // ecrire la ligne dans le fichier temporaire sauf s'il est la lignne a suprime
+        if (count != lineToDelete) {
+            fputc(ch, tmp);
+        }
+    }
+    fclose(fichier);
+    fclose(tmp);
+
+    remove("test.txt");
+    rename("tmp.txt", "test.txt");
+    return fopen("test.txt","r+");
+
+    
+}
+
+void trierTabEtudiantsParNom(Etudiant *tab, int size){
+    Etudiant tmp;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i+1; j < size; j++)
+        {
+            if (strcmp(tab[i].nom,tab[j].nom) > 0)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+            }
+            
+        }
+        
     }
     
+}
+
+void trierTabEtudiantsParPreom(Etudiant *tab, int size){
+    Etudiant tmp;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i+1; j < size; j++)
+        {
+            if (strcmp(tab[i].prenom,tab[j].prenom) > 0)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+            }
+            
+        }
+        
+    }
+    
+}
+void trierTabEtudiantsParApogee(Etudiant *tab, int size){
+    Etudiant tmp;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i+1; j < size; j++)
+        {
+            if (tab[i].numApogee > tab[j].numApogee)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+            }
+            
+        }
+        
+    }
+    
+}
+void trierTabEtudiantsParMoyenne(Etudiant *tab, int size){
+    Etudiant tmp;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i+1; j < size; j++)
+        {
+            if (tab[i].moyenne > tab[j].moyenne)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+            }
+            
+        }
+        
+    }
+    
+}
+void trierTabEtudiantsParDate(Etudiant *tab, int size){
+    Etudiant tmp;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = i+1; j < size; j++)
+        {
+            if (tab[i].date_inscription.annee > tab[j].date_inscription.annee)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+                continue;
+            }
+            if (tab[i].date_inscription.annee < tab[j].date_inscription.annee){continue;}
+            
+            if (tab[i].date_inscription.mois > tab[j].date_inscription.mois)
+            {
+                tmp = tab[i];
+                tab[i] = tab[j];
+                tab[j] = tmp;
+                continue;
+            }
+            if (tab[i].date_inscription.mois < tab[j].date_inscription.mois){continue;}
+            
+            if (tab[i].date_inscription.jour <= tab[j].date_inscription.jour){continue;}
+            tmp = tab[i];
+            tab[i] = tab[j];
+            tab[j] = tmp;
+            continue;
+            
+        }
+    }
+}
+
+
+Etudiant *filtrerEtudiantsFiliere(Etudiant *tab,int size,int filiere){
+    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+    int index=0;
+    for (int i = 0; i < size; ++i)
+    {
+        if (tab[i].filiere == filiere)
+        {
+            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
+            tabfiltre[index] = tab[i];
+            index++;
+        }
+    }
+    return tabfiltre;
+}
+Etudiant *filtrerEtudiantsFormation(Etudiant *tab,int size,int formation){
+    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+    int index=0;
+    for (int i = 0; i < size; ++i)
+    {
+        if (tab[i].formation == formation)
+        {
+            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
+            tabfiltre[index] = tab[i];
+            index++;
+        }
+    }
+    return tabfiltre;
+}
+Etudiant *filtrerEtudiantsRedoublant(Etudiant *tab,int size,Bool redoublant){
+    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+    int index=0;
+    for (int i = 0; i < size; ++i)
+    {
+        if (tab[i].redoublant == redoublant)
+        {
+            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
+            tabfiltre[index] = tab[i];
+            index++;
+        }
+    }
+    return tabfiltre;
+}
+Etudiant *filtrerEtudiantsGtd(Etudiant *tab,int size,int G_TD){
+    Etudiant *tabfiltre = (Etudiant *)malloc(sizeof(Etudiant));
+    int index=0;
+    for (int i = 0; i < size; ++i)
+    {
+        if (tab[i].G_TD == G_TD)
+        {
+            tabfiltre = realloc(tabfiltre,(index +1)* sizeof(Etudiant));
+            tabfiltre[index] = tab[i];
+            index++;
+        }
+    }
+    return tabfiltre;
+}
+
+
+// Programme principal de test
+int main()
+{
+    FILE *fichier = NULL;
+    fichier = fopen("test.txt", "r+");
+    int *NPL = NombrePositionLigne(fichier);
+    Etudiant *tab = tabEtudiants(fichier,NPL);
+    for (int i = 0; i < NPL[0] - 2; i++)
+    {
+        printf("%s:",tab[i].nom);
+        printf("%d\n",tab[i].date_inscription.annee);
+    }
+    Etudiant *tab2 = filtrerEtudiantsFormation(tab,4,2);
+    for (int i = 0; i < NPL[0] - 2; i++)
+    {
+        printf("%s:",tab[i].nom);
+        printf("%d\n",tab[i].date_inscription.jour);
+    }
+
     fclose(fichier);
     printf("\033[0;37m");
     return 0;

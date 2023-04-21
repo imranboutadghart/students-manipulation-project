@@ -1,18 +1,7 @@
 ----------------------------------------------------------------------------------------------------------------------
 | Nom		     | Prenom		  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
 |----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
-|imran           |boutadghart     |1831200 | 11/Novembre /2018 |  SMI   |    lmd       | ~~~~~~~~~~ | Grp5 |  0.000  |
-|youssef         |ke3ke3          |1731360 | 10/Octobre  /2017 |  SMA   |    master    | Redoublant | Grp4 |  0.000  |
-|khalid          |mokhlwid        |1531576 | 8 /Fevrier  /2015 |  SMIA  |    doctorat  | ~~~~~~~~~~ | Grp5 |  0.000  |
-|bruh            |boutadghart     |1831200 | 11/Novembre /2018 |  SMI   |    lmd       | ~~~~~~~~~~ | Grp5 |  0.000  |
-|nig             |ke3             |1731360 | 10/Octobre  /2017 |  SMA   |    master    | Redoublant | Grp4 |  0.000  |
-|khalid          |zikrani         |1531576 | 8 /Fevrier  /2015 |  SMIA  |    doctorat  | ~~~~~~~~~~ | Grp5 |  0.000  |
-|imran           |boutadghart     |1831200 | 11/Novembre /2018 |  SMI   |    lmd       | ~~~~~~~~~~ | Grp5 |  0.000  |
-|youssef         |ke3ke3          |1731360 | 10/Octobre  /2017 |  SMA   |    master    | Redoublant | Grp4 |  0.000  |
-|khalid          |mokhlwid        |1531576 | 8 /Fevrier  /2015 |  SMIA  |    doctorat  | ~~~~~~~~~~ | Grp5 |  0.000  |
-|bruh            |bruuh           |2464    | 14/Decembre /2000 |  SMC   |    License   | Redoublant | Grp4 |  0.000  |
-|guru            |guru            |402605  | 25/Novembre /2004 |  SMI   |    Master    | Redoublant | Grp5 |  0.000  |
-|imrara          |boutata         |1010550 | 15/Juin     /2000 |  SMA   |    Master    | ~~~~~~~~~~ | Grp6 |  0.000  |
-|duuh            |bruuh           |1601067 | 14/Decembre /16   |  SMA   |    Doctorat  | ~~~~~~~~~~ | Grp3 |  0.000  |
-|imran           |boutadghart     |1211918 | 12/Decembre /12   |  SVTU  |    Doctorat  | Redoublant | Grp3 |  0.000  |
-|youssef         |ke3ke3          |111980  |  1/Janvier  /1    |  SMA   |    Doctorat  | Redoublant | Grp2 |  0.000  |
+|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
+|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+|amina           |petite          |1027859 |  9/Octobre  /2010 |  SMPC  |    License   | ~~~~~~~~~~ | Grp3 |  0.000  |
