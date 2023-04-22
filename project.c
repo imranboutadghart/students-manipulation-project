@@ -5,13 +5,16 @@
 #include <unistd.h> 
 
 #define MAX_CARACTERE 120 
+#define _Line 119
 
 // Definition d'enumeration booleenne
 typedef enum Bool{faux, vrai}Bool;
 // Definition de structure de date
 typedef struct Date
 {
-    short int mois, jour, annee;
+    short int annee;
+    short int mois;
+    short int jour;
 }Date;
 // Affiche les mois par leur nom
 const char* nomMois[] = {"","Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"};
@@ -22,23 +25,23 @@ const char* Formations[] = {"","License", "Master", "Doctorat"};
 
 // Definition de structure etudiant
 typedef struct Etudiant{
-int line;
-unsigned int numApogee;
 char *nom;
 char *prenom;
-Date date_inscription;
-short int formation;
-Bool redoublant;
-short filiere;
-short G_TD;
-int MAXNOTES;
+unsigned short formation;
+unsigned short filiere;
+unsigned short G_TD;
+unsigned int line;
+unsigned int numApogee;
+unsigned int MAXNOTES;
+unsigned int nbnotes;
 float *notes;
-int nbnotes;
 float moyenne;
+Bool redoublant;
+Date date_inscription;
 }Etudiant;
 
 // Nettoyage de la console
-void ClearConsole(int n)
+void ClearConsole(int n) //DONE
 {
     for (int i = 0; i < n; i++) {
         // Vider la console
@@ -53,13 +56,14 @@ void ClearConsole(int n)
 }
 
 // Message d'erreur
-void Erreur(int err)
+void Erreur(int err) //DONE
 {
-    if (err == 0){printf("+-\033[0;31mErreur: Mal saisie de donnees!\033[0;33m\n");}
-    
+    if (err == 0){printf("+-\033[0;31mErreur: Mal saisie de donnees!\033[0;33m\n"); return;}
+    if (err == 1){printf("+-\033[0;31mErreur: allocation de memoire a echoué!\033[0;33m\n"); return;}
+    if (err == 2){printf("+-\033[0;31mErreur: ouverture d'un fichier a echoué!\033[0;33m\n"); return;}
 }
 // Lire une booleenne (o-O/n-N)
-void lireBool(Bool *bool){
+void lireBool(Bool *bool){ //DONE
     char tmp;
     do
     {
@@ -76,7 +80,7 @@ void lireBool(Bool *bool){
 }
 
 // Verifier si l'anner saisie est bissextile
-Bool estBissextile(int annee) {
+Bool estBissextile(int annee) { //DONE 
     if ((annee % 4 == 0 && annee % 100 != 0) || annee % 400 == 0) {
         return vrai;
     } else {
@@ -84,7 +88,7 @@ Bool estBissextile(int annee) {
     }
 }
 // Verifier si la date saisie est valide
-Bool estDateValide(int jour, int mois, int annee) {
+Bool estDateValide(int jour, int mois, int annee) { //DONE
     int joursDansMois[] = {31, 28 + estBissextile(annee), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (mois < 1 || mois > 12) {
         return faux;
@@ -95,7 +99,7 @@ Bool estDateValide(int jour, int mois, int annee) {
     return vrai;
 }
 // Saisie de la date
-void lireDate(Date *date){
+void lireDate(Date *date){ //DONE
     scanf("%hu %hu %hu",&date->jour,&date->mois,&date->annee);
     while (!estDateValide(date->jour, date->mois, date->annee))
     {
@@ -106,7 +110,7 @@ void lireDate(Date *date){
 }
 
 // Generer une sequence de nombre aleatoire de 7 chiffres
-int NombreAleatoire_7(int year) {
+int NombreAleatoire_7(int year) { //DONE
     unsigned int num;
     time_t t;
     t = time(NULL);
@@ -116,48 +120,56 @@ int NombreAleatoire_7(int year) {
     return num;
 }
 
-// Sasie de la filiere de l'etudiant
-void FiliereEtudiant(Etudiant *etud){
-    printf("\033[0;33m+ Saisir la filiere de l'etudiant: \n");
-    printf("+ 1: SMPC\n+ 2: SMC\n+ 3: SMP\n+ 4: STU\n+ 5: SV\n+ 6: SVTU\n+ 7: SMIA\n+ 8: SMA\n+ 9: SMI\n");
-    printf("+ \033[0;32m=>");
-    scanf("%hd",&etud->filiere);
-}
 
 // Lire les donnees de l'etudiant
-void LireEtudiant(Etudiant *etud){
+void LireEtudiant(Etudiant *etud){ //DONE
     etud->nbnotes = 0;
     etud->prenom = (char*)malloc(MAX_CARACTERE * sizeof(char));
     etud->nom = (char*)malloc(MAX_CARACTERE * sizeof(char));
+    if (etud->nom == NULL || etud->prenom == NULL){Erreur(1);}
+
     printf("\033[0;33m+-------------------------------------------------+\n");
+    
     printf("\033[0;33m+ Saisir le nom de l'etudiant : \033[0;32m");
     scanf(" %100[^\n]s",etud->nom);
     etud->nom = (char*)realloc(etud->nom,(strlen(etud->nom) + 1 ) * sizeof(char));
+    
     printf("\033[0;33m+ Saisir le prenom de l'etudiant : \033[0;32m");
     scanf(" %100[^\n]s", etud->prenom);
     etud->prenom = (char*)realloc(etud->prenom,(strlen(etud->prenom) + 1 ) * sizeof(char));
     printf("\033[0;33m+ Saisir la date d'inscription de l'etudiant (jj mm aa) : \033[0;32m");
     lireDate(&etud->date_inscription);
-    FiliereEtudiant(etud);
+
+    do
+    {
+        printf("\033[0;33m+ Saisir la filiere de l'etudiant: \n+ 1: SMPC\n+ 2: SMC\n+ 3: SMP\n+ 4: STU\n+ 5: SV\n+ 6: SVTU\n+ 7: SMIA\n+ 8: SMA\n+ 9: SMI\n+ \033[0;32m=>");
+        scanf("%hd",&etud->filiere);
+    } while (etud->filiere < 1 || etud->filiere > 9);
+
     int random = NombreAleatoire_7(etud->date_inscription.annee % 100);
     etud->numApogee = random; // Generer un numero d'appogee de 7 chiffres (2 premiers font reference a l'annee de l'inscription)
+
     do{
     printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: License\n+ 2: Master\n+ 3: Doctorat : \033[0;32m");
     scanf(" %hd",&etud->formation);
     }while(etud->formation<1 && etud->formation >3);
+    
     printf("\033[0;33m+ Est-ce-que l'etudiant est un redoublant?(O/N): \033[0;32m");
     lireBool(&etud->redoublant);
+    
     printf("\033[0;33m+ Saisir le groupe de TD :\033[0;32m");
     scanf("%hu",&etud->G_TD);
+    
     printf("\033[0;33m+ Saisir le nombre maximales de notes : \033[0;32m");
     scanf("%d",&etud->MAXNOTES);
+    
     etud->notes = (float*)malloc(etud->MAXNOTES * sizeof(float));
     printf("\033[0;33m+-------------------------------------------------+\n");
     ClearConsole(2);
 }
 
 // Modifier les notes de l'etudiant
-void editNotes(Etudiant *etud){
+void editNotes(Etudiant *etud){ //XXX
     int noteIndex;
     float oldNote;
     printf("\033[0;33m+-------------------------------------------------+\n");
@@ -182,7 +194,7 @@ void editNotes(Etudiant *etud){
 }
 
 // Modifier les donnees de l'etudiant
-void EditEtudiant(Etudiant *etud){
+void EditEtudiant(Etudiant *etud){ //XXX
     short int choix;
     fflush(stdin);
     printf("\033[0;33m+-------------------------------------------------+\n");
@@ -195,6 +207,7 @@ void EditEtudiant(Etudiant *etud){
     switch (choix){
     case 1:
         etud->nom = (char*)realloc(etud->nom,MAX_CARACTERE * sizeof(char));
+        if (etud->nom == NULL){Erreur(1);}
         printf("\033[0;33m+ Saisir le nom de l'etudiant :\033[0;32m\n");
         scanf(" %100[^\n]s",etud->nom);
         etud->nom = (char*)realloc(etud->nom,(strlen(etud->nom) + 1 ) * sizeof(char));
@@ -203,16 +216,23 @@ void EditEtudiant(Etudiant *etud){
     
     case 2:
         etud->prenom = (char*)realloc(etud->prenom,MAX_CARACTERE * sizeof(char));
+        if (etud->prenom == NULL){Erreur(1);}
         printf("\033[0;33m+ Saisir le prenom de l'etudiant :\033[0;32m\n");
         scanf(" %100[^\n]s",etud->prenom);
         etud->prenom = (char*)realloc(etud->prenom,(strlen(etud->prenom) + 1 ) * sizeof(char));
-   break;
+        break;
     
     case 3:
         lireDate(&etud->date_inscription);
         break;
     case 4:
-        FiliereEtudiant(etud);
+        
+        do
+        {
+            printf("\033[0;33m+ Saisir la filiere de l'etudiant: \n+ 1: SMPC\n+ 2: SMC\n+ 3: SMP\n+ 4: STU\n+ 5: SV\n+ 6: SVTU\n+ 7: SMIA\n+ 8: SMA\n+ 9: SMI\n+ \033[0;32m=>");
+            scanf("%hd",&etud->filiere);
+        } while (etud->filiere < 1 || etud->filiere > 9);
+
         break;
     case 5:
     
@@ -242,13 +262,13 @@ void EditEtudiant(Etudiant *etud){
 }
 
 // Afficher l'entete du tableau sur le fichier
-void TabHeader(FILE *fichier)
+void TabHeader(FILE *fichier) // DONE
 {
     fseek(fichier,0,SEEK_END);
     if (ftell(fichier) == 0) // Tester si le fichier est vide
     {
         fprintf(fichier,"----------------------------------------------------------------------------------------------------------------------\n");
-        fprintf(fichier,"| Nom\t\t     | Prenom\t\t  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |\n");
+        fprintf(fichier,"| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |\n");
         fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
     }
     fseek(fichier,0,SEEK_END);
@@ -258,13 +278,13 @@ void TabHeader(FILE *fichier)
 void AfficheTabHeader()
 {
     printf("----------------------------------------------------------------------------------------------------------------------\n");
-    printf("| Nom\t\t | Prenom\t  | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne |\n");
-    printf("|----------------|----------------|--------|-------------------|-----------|-----------|------------|------|---------|\n");
+    printf("| Nom            | Prenom         | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne |\n");
+    printf("|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
 }
 
 // Sauvegarder les donnees de l'etudiant dans un fichier externe
-void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
-    
+void SauvegardeEtudiant(Etudiant etud,FILE *fichier){ // DONE
+    TabHeader(fichier);
     fprintf(fichier,"|%-16.*s", 16, etud.nom);
     fprintf(fichier,"|%-16.*s", 16, etud.prenom);
     fprintf(fichier,"|%07i ", etud.numApogee);
@@ -284,15 +304,15 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){
 }
 
 // Afficher les donnees de l'etudiant
-void AfficheEtudiant(Etudiant etud){
+void AfficheEtudiant(Etudiant etud){ //DONE
     printf("\033[0;33m+-------------------------------------------------+\n");
     printf("+-Nom :\033[0;32m%s\n\033[0;33m",etud.nom);
     printf("+-Preom :\033[0;32m%s\033[0;33m\n",etud.prenom);
-    printf("+-Numero d'apogee: \033[0;32m%07i\ni\033[0;33m\n", etud.numApogee);
+    printf("+-Numero d'apogee: \033[0;32m%07i\033[0;33m\n", etud.numApogee);
     printf("+-Date d'inscription : \033[0;32m%hu/%s/%hu\033[0;33m\n", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
     printf("+-Filiere : \033[0;32m%s\033[0;33m\n",Filieres[etud.filiere]);
     printf("+-Niveau de formation : \033[0;32m%s \033[0;33m\n",Formations[etud.formation]);
-    if (etud.redoublant == 0){printf("+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");}
+    if (etud.redoublant == 1){printf("+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");}
     else{printf("+-L'etduiant \033[0;32mn'est pas un redoublant.\033[0;33m\n");}
     printf("+-Groupe de TD : \033[0;32m%d\033[0;33m\n",etud.G_TD);
     printf("+-Les notes de l'etudiant :\033[0;32m");
@@ -339,21 +359,19 @@ void AjouteNote(Etudiant *etud){
 }
 
 // Position du premier characteres pour chaque ligne pour des raisons d'affichage
-int* NombrePositionLigne(FILE *fichier){
+int* NombrePositionLigne(FILE *fichier){ //DONE
     rewind(fichier);
     int size=5, *array = (int *)malloc(size*sizeof(int)), lineCount=0;
     char *line = (char *)malloc(MAX_CARACTERE*sizeof(char));
-    if (line == NULL)
-    {
-        printf("\033[0;31m+ Erreur d'allocation en memoire!\n\033[0;37m");
-        return NULL;
-    }
+    if(array == NULL || line == NULL){erreur(1);return NULL;}
+
     while (fgets(line,MAX_CARACTERE,fichier) != NULL)
     {    
         if (lineCount % 5 == 4)
         {
             size +=5;
             array = realloc(array,size*sizeof(int));
+            if(array == NULL){erreur(1);return NULL;}
         }
         lineCount++;
         array[lineCount] = ftell(fichier);
@@ -365,7 +383,7 @@ int* NombrePositionLigne(FILE *fichier){
 }
 
 // Afficher une ligne a partir de sa position
-void AfficheLigne(FILE *file,int linePos){
+void AfficheLigne(FILE *file,int linePos){ //DONE
     fseek(file,linePos,SEEK_SET);
     char line[MAX_CARACTERE];
     fgets(line,MAX_CARACTERE,file);
@@ -373,18 +391,19 @@ void AfficheLigne(FILE *file,int linePos){
 }
 
 // Afficher un tableau de lignes (Premier element du tableau est sa taille)
-void AfficheTabLignes(FILE *file,int *NPL){
+void AfficheTabLignes(FILE *file,int *NPL){ //DONE
     ClearConsole(2);
     AfficheTabHeader();
     for (int i = 3; i <= NPL[0]; i++)//first element of NPL is size of NPL
     {
         AfficheLigne(file, NPL[i]);
     }
-    printf("----------------------------------------------------------------------------------------------------------\n");
+    printf("----------------------------------------------------------------------------------------------------------------------\n");
 }
 
-// Rechercher les etudiants par noms ou prenoms
-int* RechercheEtudiant_Nom_Prenom(FILE *fp){
+/* Rechercher les etudiants par noms ou prenoms 
+!elle retourne un tableau dans le premier element est le nombre des element du tableau et chaque element correspand a la position d'une ligne */
+int* RechercheEtudiant_Nom_Prenom(FILE *fp){ //DONE
     int *array = (int *) malloc(sizeof(int));
     int *linePositions = NombrePositionLigne(fp),lineCount = 0;
     char key[17], src[35], line[MAX_CARACTERE];
@@ -393,7 +412,7 @@ int* RechercheEtudiant_Nom_Prenom(FILE *fp){
     printf("+ \033[0;32m=>");
     scanf("%16s",key);
     printf("\033[0;33m");
-    for (int i = 3; i < linePositions[0]; i++)
+    for (int i = 3; i < linePositions[0]+1; i++)
     {
         fseek(fp,linePositions[i], SEEK_SET);
         fgets(line,MAX_CARACTERE,fp);
@@ -414,7 +433,7 @@ int* RechercheEtudiant_Nom_Prenom(FILE *fp){
 }
 
 // Lire un etudiant a partir du fichier
-Etudiant lireEtudiantFichier(FILE* fichier ,int line) {
+Etudiant lireEtudiantFichier(FILE* fichier ,int line) { //DONE
     Etudiant etud;
     char mois[10];
     char filiere[5];
@@ -459,13 +478,15 @@ Etudiant lireEtudiantFichier(FILE* fichier ,int line) {
         etud.redoublant = 1;
     }
     // Calcul du numero de la ligne apartir de la position du curseur
-    etud.line = ((line - 347)/119)+4;
+    etud.line = (line/_Line);
+    printf("%d\n",etud.line);
     return etud;
 }
 
-
+//appelée quand le program lance, retourne un tableau de tous les etudiants du fichier
 Etudiant *tabEtudiants(FILE *fichier, int *NPL){ // NPL nummberAndPositionOfLines
     Etudiant *tab =(Etudiant *)malloc(NPL[0]*sizeof(Etudiant));
+    if(tab == NULL){erreur(1);return NULL;}
     for (int i = 3; i <= NPL[0]; i++)
     {
         tab[i-3] = lireEtudiantFichier(fichier, NPL[i]);
@@ -485,6 +506,7 @@ void afficheTabEtudiants(Etudiant *tab,int size){
 FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
     int lineToDelete = etud.line;
     FILE *tmp = fopen("tmp.txt","w+");
+    if (tmp == NULL){erreur(3);return fichier;}
     rewind(fichier);
     int count = 1;
     char ch;
@@ -504,6 +526,7 @@ FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
     rename("tmp.txt", "test.txt");
     return fopen("test.txt","r+");
 }
+
 
 void trierTabEtudiantsParNom(Etudiant *tab, int size){
     Etudiant tmp;
