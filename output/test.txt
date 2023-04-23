@@ -1,12 +1,6 @@
-----------------------------------------------------------------------------------------------------------------------
-| Nom		     | Prenom		  | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
-|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
-|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
-|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
-|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|imran           |boutadghart     |1026801 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp2 |  0.000  |
-|youssef         |ke3ke3          |427572  |  2/Novembre /2004 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
-|Imran           |lmokhlwid       |1227673 | 12/Decembre /2012 |  SMA   |    Master    | ~~~~~~~~~~ | Grp3 |  0.000  |
+-----------------------------------------------------------------------------------------------------------------------
+| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne  |
+|----------------|----------------|--------|-------------------|--------|--------------|------------|------|----------|
+|bruh1           |bruh1           |0131177 |  1/Janvier  /1    |  SMC   |    Master    | Redoublant | Grp2 |  00.000  |
+|bruh2           |bruh2           |0231239 |  2/Fevrier  /2    |  SMP   |    Doctorat  | ~~~~~~~~~~ | Grp2 |  05.167  |
+|bruh3           |bruh3           |0331344 |  3/Mars     /3    |  SMP   |    License   | ~~~~~~~~~~ | Grp2 |  05.167  |

@@ -5,7 +5,12 @@
 #include <unistd.h> 
 
 #define MAX_CARACTERE 120 
-#define _Line 119
+#define _Line 120
+#define MAX_NOTES 6
+#define FICHIERDATA "test.txt"
+#define FICHIERNOTES "notes.txt"
+
+
 
 // Definition d'enumeration booleenne
 typedef enum Bool{faux, vrai}Bool;
@@ -32,13 +37,19 @@ unsigned short filiere;
 unsigned short G_TD;
 unsigned int line;
 unsigned int numApogee;
-unsigned int MAXNOTES;
 unsigned int nbnotes;
 float *notes;
 float moyenne;
 Bool redoublant;
 Date date_inscription;
 }Etudiant;
+
+void AjouteNote(Etudiant*);
+void sauvgardeNotes(Etudiant, FILE*);
+void lireNoteFichier(FILE*, Etudiant*,int);
+void SauvegardeEtudiant(Etudiant,FILE*, FILE*);
+void editEtudiantFile(Etudiant,FILE**,FILE**);
+
 
 // Nettoyage de la console
 void ClearConsole(int n) //DONE
@@ -55,7 +66,7 @@ void ClearConsole(int n) //DONE
     system("clear");
 }
 
-// Message d'erreur
+// Message d'Erreur
 void Erreur(int err) //DONE
 {
     if (err == 0){printf("+-\033[0;31mErreur: Mal saisie de donnees!\033[0;33m\n"); return;}
@@ -122,7 +133,7 @@ int NombreAleatoire_7(int year) { //DONE
 
 
 // Lire les donnees de l'etudiant
-void LireEtudiant(Etudiant *etud){ //DONE
+void LireEtudiant(Etudiant *etud,FILE *fichier, FILE *fichierNote){ //DONE
     etud->nbnotes = 0;
     etud->prenom = (char*)malloc(MAX_CARACTERE * sizeof(char));
     etud->nom = (char*)malloc(MAX_CARACTERE * sizeof(char));
@@ -159,30 +170,32 @@ void LireEtudiant(Etudiant *etud){ //DONE
     
     printf("\033[0;33m+ Saisir le groupe de TD :\033[0;32m");
     scanf("%hu",&etud->G_TD);
-    
-    printf("\033[0;33m+ Saisir le nombre maximales de notes : \033[0;32m");
-    scanf("%d",&etud->MAXNOTES);
-    
-    etud->notes = (float*)malloc(etud->MAXNOTES * sizeof(float));
+    etud->nbnotes = 0;
+    etud->notes = (float*)malloc(MAX_NOTES * sizeof(float));
+    Bool tmp;
+    printf("\033[0;33m+ voulez vous ajouter des notes?(o/n) :\033[0;32m");
+    lireBool(&tmp);
+    if(tmp)AjouteNote(etud);
+    SauvegardeEtudiant(*etud, fichier, fichierNote);
     printf("\033[0;33m+-------------------------------------------------+\n");
     ClearConsole(2);
 }
 
 // Modifier les notes de l'etudiant
 void editNotes(Etudiant *etud){ //XXX
-    int noteIndex;
+    unsigned int noteIndex;
     float oldNote;
     printf("\033[0;33m+-------------------------------------------------+\n");
     do{
         printf("+ Quelle est la note que vous souhaitez changer?\033[0;32m\n");
-        for (int i = 0; i < etud->nbnotes; i++){
+        for (unsigned int i = 0; i < etud->nbnotes; i++){
             printf("\033[0;33m+ %d: %f\n", i, etud->notes[i]);
         }
         printf("+ %d: Annuler.\n\033[0;32m", etud->nbnotes);
         printf("+ =>");
         scanf("%d", &noteIndex);
     printf("\033[0;33m+-------------------------------------------------+\n");
-    } while (noteIndex < 0 || noteIndex > etud->nbnotes);
+    } while (noteIndex > etud->nbnotes);
     if (noteIndex != etud->nbnotes)
     {
         oldNote = etud->notes[noteIndex];
@@ -193,9 +206,46 @@ void editNotes(Etudiant *etud){ //XXX
     printf("\033[0;33m+-------------------------------------------------+\n");
 }
 
+// Ajouter des notes si possible
+void AjouteNote(Etudiant *etud){
+    int comp = 0;
+    Bool reponse;
+    printf("\033[0;33m+-------------------------------------------------+\n");
+    if (etud->nbnotes == MAX_NOTES) {
+        printf("+ Vous avez atteint le nombre maximal de notes.\n");
+    }
+    while (reponse != faux && comp < MAX_NOTES)
+    { 
+        comp++;
+        if (etud->nbnotes < MAX_NOTES)
+        {
+            printf("+ Saisir la note :\033[0;32m");
+            scanf("%f",&etud->notes[etud->nbnotes]);
+            printf("\033[0;33m");
+            etud->nbnotes++;
+            etud->moyenne = (etud->moyenne * (etud->nbnotes - 1) + etud->notes[etud->nbnotes - 1]) / etud->nbnotes;
+        }
+        else
+        {
+            printf("+ Vous avez depasser le nombre maximal des notes.\n");
+            break;
+        }
+        if (comp < MAX_NOTES)
+        {
+            printf("+ Voulez-vous ajouter une note? (O/N)\n");
+            printf("+ \033[0;32m=>");
+            lireBool(&reponse);
+            printf("\033[0;33m");
+        }
+    }
+    ClearConsole(3);
+}
+
 // Modifier les donnees de l'etudiant
-void EditEtudiant(Etudiant *etud){ //XXX
+void EditEtudiant(Etudiant *etud,FILE **fichier, FILE **fichierNote){ //XXX
     short int choix;
+    Bool bool = 0;
+    do{
     fflush(stdin);
     printf("\033[0;33m+-------------------------------------------------+\n");
     printf("+ Quel information souhaitez vous modifier :\n+ 1:modifier le nom\n+ 2:modifier le prenom\n+ 3:modifier la date d'inscription\n+ 4:Modifier la filiere\n+ 5:Modifier le niveau de formation\n+ 6:Modifier le groupe de td\n+ 7:Modifier les notes\n+ 8:Annuler\n");
@@ -203,7 +253,7 @@ void EditEtudiant(Etudiant *etud){ //XXX
     printf("+ \033[0;32m=>");
     scanf("%hu",&choix);
     printf("\033[0;33m+-------------------------------------------------+\n");
-    }while (choix < 1 && choix > 6);
+    }while (choix < 1 && choix > 8);
     switch (choix){
     case 1:
         etud->nom = (char*)realloc(etud->nom,MAX_CARACTERE * sizeof(char));
@@ -248,8 +298,15 @@ void EditEtudiant(Etudiant *etud){ //XXX
         scanf("%hu",&etud->G_TD);
         break;
     
-    case 7:
-        editNotes(etud);
+    case 7: ;
+        short ajoutnote = 3;
+        while (ajoutnote <1 || ajoutnote >2)
+        {
+            printf("\033[0;33m+ voulez vous:\n+1:modifier une note\n+2:ajouter une note\033[0;32m\n");
+            scanf("%hd",&ajoutnote);
+        }
+        if(!(ajoutnote-1)){editNotes(etud);}
+        else{AjouteNote(etud);}
         break;
 
     case 8:
@@ -259,17 +316,52 @@ void EditEtudiant(Etudiant *etud){ //XXX
         printf("\033[0;33m+ Veuillez entrer un choix valable\033[0;32m");
         break;
     }
+    printf("\033[0;33m+ Voullez vous modifier plus d'informations?(o/n):\033[0;32m");
+    lireBool(&bool);
+    }while(bool);
+    editEtudiantFile(*etud,fichier,fichierNote);
 }
 
 // Afficher l'entete du tableau sur le fichier
+void TabHeaderNotes(FILE *fichierNote) // DONE
+{
+    fseek(fichierNote,0,SEEK_END);
+    if (ftell(fichierNote) == 0) // Tester si le fichier est vide
+    {
+
+        fprintf(fichierNote,"------------");
+        for (int i = 0; i < MAX_NOTES; i++)
+        {
+            fprintf(fichierNote,"---------");
+        }
+        fprintf(fichierNote,"\n");
+        fprintf(fichierNote,"| nbrnotes |");
+        for (int i = 0; i < MAX_NOTES; i++)
+        {
+            fprintf(fichierNote," note %d |",i);
+        }
+        fprintf(fichierNote,"\n");
+
+        fprintf(fichierNote,"------------");
+        for (int i = 0; i < MAX_NOTES; i++)
+        {
+            fprintf(fichierNote,"---------");
+        }
+        fprintf(fichierNote,"\n");
+        
+        
+    }
+    fseek(fichierNote,0,SEEK_END);
+}
+
 void TabHeader(FILE *fichier) // DONE
 {
     fseek(fichier,0,SEEK_END);
     if (ftell(fichier) == 0) // Tester si le fichier est vide
     {
-        fprintf(fichier,"----------------------------------------------------------------------------------------------------------------------\n");
-        fprintf(fichier,"| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |\n");
-        fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
+        fprintf(fichier,"-----------------------------------------------------------------------------------------------------------------------\n");
+        fprintf(fichier,"| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne  |\n");
+        fprintf(fichier,"|----------------|----------------|--------|-------------------|--------|--------------|------------|------|----------|\n");
     }
     fseek(fichier,0,SEEK_END);
 }
@@ -277,13 +369,13 @@ void TabHeader(FILE *fichier) // DONE
 // Afficher l'entete du tableau sur la console
 void AfficheTabHeader()
 {
-    printf("----------------------------------------------------------------------------------------------------------------------\n");
-    printf("| Nom            | Prenom         | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne |\n");
-    printf("|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|\n");
+    printf("---------------------------------------------------------------------------------------------------------------------=-\n");
+    printf("| Nom            | Prenom         | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne  |\n");
+    printf("|----------------|----------------|--------|-------------------|--------|--------------|------------|------|----------|\n");
 }
 
 // Sauvegarder les donnees de l'etudiant dans un fichier externe
-void SauvegardeEtudiant(Etudiant etud,FILE *fichier){ // DONE
+void SauvegardeEtudiant(Etudiant etud,FILE *fichier, FILE *fichierNote){ // DONE
     TabHeader(fichier);
     fprintf(fichier,"|%-16.*s", 16, etud.nom);
     fprintf(fichier,"|%-16.*s", 16, etud.prenom);
@@ -299,8 +391,20 @@ void SauvegardeEtudiant(Etudiant etud,FILE *fichier){ // DONE
     }
     fprintf(fichier,"| Grp%-2hu",etud.G_TD);
     fprintf(fichier,"|");
-    fprintf(fichier,"  %2.3f  ",etud.moyenne);
+    fprintf(fichier,"  %06.3f  ",etud.moyenne);
     fprintf(fichier,"|\n");
+    sauvgardeNotes(etud, fichierNote);
+}
+
+//sauvgarde les notes d'un etudiant dans un fichier externe
+void sauvgardeNotes(Etudiant etud,FILE *fichierNote){
+    TabHeaderNotes(fichierNote);
+    fprintf(fichierNote,"|    %-5i |",etud.nbnotes);
+    for (unsigned int i = 0; i < etud.nbnotes; i++)
+    {
+        fprintf(fichierNote, "  %05.2f |",etud.notes[i]);
+    }
+    fprintf(fichierNote,"\n");
 }
 
 // Afficher les donnees de l'etudiant
@@ -316,69 +420,30 @@ void AfficheEtudiant(Etudiant etud){ //DONE
     else{printf("+-L'etduiant \033[0;32mn'est pas un redoublant.\033[0;33m\n");}
     printf("+-Groupe de TD : \033[0;32m%d\033[0;33m\n",etud.G_TD);
     printf("+-Les notes de l'etudiant :\033[0;32m");
-    for (int i = 0; i < etud.nbnotes; i++){
+    for (unsigned int i = 0; i < etud.nbnotes; i++){
     printf("\t%.3f",etud.notes[i]);
     }
     printf("\033[0;33m\n+-La moyenne de l'etudiant :\033[0;32m%f",etud.moyenne);
     printf("\033[0;33m\n");
 }
 
-// Ajouter des notes si possible
-void AjouteNote(Etudiant *etud){
-    int comp = 0;
-    Bool reponse;
-    printf("\033[0;33m+-------------------------------------------------+\n");
-    if (etud->nbnotes == etud->MAXNOTES) {
-        printf("+ Vous avez atteint le nombre maximal de notes.\n");
-    }
-    while (reponse != faux && comp < etud->MAXNOTES)
-    { 
-        comp++;
-        if (etud->nbnotes < etud->MAXNOTES)
-        {
-            printf("+ Saisir la note :\033[0;32m");
-            scanf("%f",&etud->notes[etud->nbnotes]);
-            printf("\033[0;33m");
-            etud->nbnotes++;
-            etud->moyenne = (etud->moyenne * (etud->nbnotes - 1) + etud->notes[etud->nbnotes - 1]) / etud->nbnotes;
-        }
-        else
-        {
-            printf("+ Vous avez depasser le nombre maximal des notes.\n");
-            break;
-        }
-        if (comp < etud->MAXNOTES)
-        {
-            printf("+ Voulez-vous ajouter une note? (O/N)\n");
-            printf("+ \033[0;32m=>");
-            lireBool(&reponse);
-            printf("\033[0;33m");
-        }
-    }
-    ClearConsole(3);
-}
 
 // Position du premier characteres pour chaque ligne pour des raisons d'affichage
 int* NombrePositionLigne(FILE *fichier){ //DONE
     rewind(fichier);
-    int size=5, *array = (int *)malloc(size*sizeof(int)), lineCount=0;
-    char *line = (char *)malloc(MAX_CARACTERE*sizeof(char));
-    if(array == NULL || line == NULL){erreur(1);return NULL;}
+    int *array = (int *)malloc(1*sizeof(int)), lineCount=0;
+    char ch;
+    if(array == NULL){Erreur(1);return NULL;}
 
-    while (fgets(line,MAX_CARACTERE,fichier) != NULL)
-    {    
-        if (lineCount % 5 == 4)
-        {
-            size +=5;
-            array = realloc(array,size*sizeof(int));
-            if(array == NULL){erreur(1);return NULL;}
+    while((ch = fgetc(fichier)) != EOF){
+        if(ch == '\n'){
+            array = realloc(array,(lineCount+1)*sizeof(int));
+            if(array == NULL){Erreur(1);return NULL;}
+            lineCount++;
+            array[lineCount] = ftell(fichier);
         }
-        lineCount++;
-        array[lineCount] = ftell(fichier);
-        
     }
     array[0]=lineCount-1;
-    free(line);
     return array;
 }
 
@@ -433,7 +498,7 @@ int* RechercheEtudiant_Nom_Prenom(FILE *fp){ //DONE
 }
 
 // Lire un etudiant a partir du fichier
-Etudiant lireEtudiantFichier(FILE* fichier ,int line) { //DONE
+Etudiant lireEtudiantFichier(FILE* fichier , FILE *fichierNote,int line) { //DONE
     Etudiant etud;
     char mois[10];
     char filiere[5];
@@ -477,19 +542,40 @@ Etudiant lireEtudiantFichier(FILE* fichier ,int line) { //DONE
     {
         etud.redoublant = 1;
     }
+    etud.notes =(float *) malloc(MAX_NOTES * sizeof(int));
+    etud.nbnotes = 0;
     // Calcul du numero de la ligne apartir de la position du curseur
     etud.line = (line/_Line);
-    printf("%d\n",etud.line);
+    lireNoteFichier(fichierNote, &etud, etud.line+2);
+    
     return etud;
 }
 
+void lireNoteFichier(FILE *fichierNote,Etudiant *etud,int linenbr){
+    fseek(fichierNote,0,SEEK_SET);
+    int nbr = 1;
+    char a;
+    while (nbr != linenbr && a!=EOF)
+    {
+        a = getc(fichierNote);
+        if(a == '\n') ++nbr;
+    }
+    if(a == EOF){etud->nbnotes = 0;return;}
+    fscanf(fichierNote,"| %d |",&etud->nbnotes);
+    for (unsigned int i = 0; i < etud->nbnotes; i++)
+    {
+        fscanf(fichierNote," %f |",&etud->notes[i]);
+    }
+    
+}
+
 //appelée quand le program lance, retourne un tableau de tous les etudiants du fichier
-Etudiant *tabEtudiants(FILE *fichier, int *NPL){ // NPL nummberAndPositionOfLines
+Etudiant *tabEtudiants(FILE *fichier,FILE *fichierNote, int *NPL){ // NPL nummberAndPositionOfLines
     Etudiant *tab =(Etudiant *)malloc(NPL[0]*sizeof(Etudiant));
-    if(tab == NULL){erreur(1);return NULL;}
+    if(tab == NULL){Erreur(1);return NULL;}
     for (int i = 3; i <= NPL[0]; i++)
     {
-        tab[i-3] = lireEtudiantFichier(fichier, NPL[i]);
+        tab[i-3] = lireEtudiantFichier(fichier,fichierNote, NPL[i]);
         tab[i-3].line = i;
     }
     return tab;
@@ -503,14 +589,14 @@ void afficheTabEtudiants(Etudiant *tab,int size){
     
 }
 
-FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
+void suprimerEtudiant(FILE **fichier, FILE **fichierNote,Etudiant etud){
     int lineToDelete = etud.line;
     FILE *tmp = fopen("tmp.txt","w+");
-    if (tmp == NULL){erreur(3);return fichier;}
-    rewind(fichier);
+    if (tmp == NULL){Erreur(3);return;}
+    rewind(*fichier);
     int count = 1;
     char ch;
-    while ((ch = fgetc(fichier)) != EOF) {
+    while ((ch = fgetc(*fichier)) != EOF) {
         if (ch == '\n') {
             count++;
         }
@@ -519,12 +605,93 @@ FILE *suprimerEtudiant(FILE *fichier,Etudiant etud){
             fputc(ch, tmp);
         }
     }
-    fclose(fichier);
+    fclose(*fichier);
     fclose(tmp);
+    remove(FICHIERDATA);
+    rename("tmp.txt", FICHIERDATA);
+    *fichier = fopen(FICHIERDATA,"a+");
+    
+    tmp = fopen("tmp.txt","w+");
+    if (tmp == NULL){Erreur(3);return;}
+    rewind(*fichierNote);
+    count = 1;
+    while ((ch = fgetc(*fichierNote)) != EOF) {
+        if (ch == '\n') {
+            count++;
+        }
+        // ecrire la ligne dans le fichier temporaire sauf s'il est la lignne a suprime
+        if (count != lineToDelete) {
+            fputc(ch, tmp);
+        }
+    }
+    fclose(*fichierNote);
+    fclose(tmp);
+    remove(FICHIERNOTES);
+    rename("tmp.txt", FICHIERNOTES);
+    *fichierNote = fopen(FICHIERNOTES,"a+");
+    
+}
 
-    remove("test.txt");
-    rename("tmp.txt", "test.txt");
-    return fopen("test.txt","r+");
+void editEtudiantFile(Etudiant etud,FILE **fichier,FILE **fichierNote){
+    int lineToChange = etud.line,count = 1;
+    FILE *tmp1 = fopen("tmp1.txt","w+");
+    FILE *tmp2 = fopen("tmp2.txt","w+");
+    if (tmp1 == NULL || tmp2 == NULL){Erreur(3);return;}
+    rewind(*fichier);rewind(*fichierNote);
+    char ch;
+    while ((ch = getc(*fichier))!=EOF)
+    {
+        if (ch == '\n')
+        {
+            ++count;
+        }
+        fputc(ch, *fichier);
+        
+        if (count == lineToChange)
+        {
+            break;
+        }
+        
+    }
+    count = 1;
+    while ((ch = getc(*fichierNote))!=EOF)
+    {
+        if (ch == '\n')
+        {
+            ++count;
+        }
+        fputc(ch, *fichierNote);
+        
+        if (count == lineToChange)
+        {
+            break;
+        }
+    }
+    SauvegardeEtudiant(etud,*fichier,*fichierNote);
+    while ((ch = fgetc(*fichier)) != '\n' && ch != EOF){}
+    while ((ch = fgetc(*fichier)) != EOF)
+    {
+        fputc(ch,*fichier);
+    }
+    
+    while ((ch = fgetc(*fichierNote)) != '\n' && ch != EOF){}
+    while ((ch = fgetc(*fichierNote)) != EOF)
+    {
+        fputc(ch,*fichierNote);
+    }
+    
+
+    fclose(*fichier);
+    fclose(*fichierNote);
+    fclose(tmp1);
+    fclose(tmp2);
+
+    remove(FICHIERDATA);
+    rename("tmp1.txt", FICHIERDATA);
+    *fichier = fopen(FICHIERDATA,"a+");
+    remove(FICHIERNOTES);
+    rename("tmp2.txt", FICHIERNOTES);
+    *fichier = fopen(FICHIERNOTES,"a+");
 }
 
 
@@ -635,7 +802,7 @@ void trierTabEtudiantsParDate(Etudiant *tab, int size){
 }
 
 
-int filtrerEtudiantsFiliere(Etudiant *originalTab,int originalTabSize,int filiere,Etudiant **destinationTabPtr){
+int filtrerEtudiantsFiliere(Etudiant *originalTab,int originalTabSize, unsigned int filiere,Etudiant **destinationTabPtr){
     Etudiant *destinationTab = NULL;
     int index=0;
     for (int i = 0; i < originalTabSize; ++i)
@@ -651,7 +818,7 @@ int filtrerEtudiantsFiliere(Etudiant *originalTab,int originalTabSize,int filier
     *destinationTabPtr = destinationTab;
     return index;
 }
-int filtrerEtudiantsFormation(Etudiant *originalTab,int originalTabSize,int formation,Etudiant **destinationTabPtr){
+int filtrerEtudiantsFormation(Etudiant *originalTab,int originalTabSize, unsigned int formation,Etudiant **destinationTabPtr){
     Etudiant *destinationTab = NULL;
     int index=0;
     for (int i = 0; i < originalTabSize; ++i)
@@ -667,7 +834,7 @@ int filtrerEtudiantsFormation(Etudiant *originalTab,int originalTabSize,int form
     *destinationTabPtr = destinationTab;
     return index;
 }
-int filtrerEtudiantsRedoublant(Etudiant *originalTab,int originalTabSize,int redoublant,Etudiant **destinationTabPtr){
+int filtrerEtudiantsRedoublant(Etudiant *originalTab,int originalTabSize, Bool redoublant,Etudiant **destinationTabPtr){
     Etudiant *destinationTab = NULL;
     int index=0;
     for (int i = 0; i < originalTabSize; ++i)
@@ -683,7 +850,7 @@ int filtrerEtudiantsRedoublant(Etudiant *originalTab,int originalTabSize,int red
     *destinationTabPtr = destinationTab;
     return index;
 }
-int filtrerEtudiantsG_TD(Etudiant *originalTab,int originalTabSize,int G_TD,Etudiant **destinationTabPtr){
+int filtrerEtudiantsG_TD(Etudiant *originalTab,int originalTabSize, unsigned int G_TD,Etudiant **destinationTabPtr){
     Etudiant *destinationTab = NULL;
     int index=0;
     for (int i = 0; i < originalTabSize; ++i)
@@ -704,16 +871,16 @@ int filtrerEtudiantsG_TD(Etudiant *originalTab,int originalTabSize,int G_TD,Etud
 // Programme principal de test
 int main()
 {
-    FILE *fichier = NULL;
-    fichier = fopen("test.txt", "r+");
+    FILE *fichier= fopen(FICHIERDATA, "a+");
+    FILE *fichierNote= fopen(FICHIERNOTES, "a+");
     int *NPL = NombrePositionLigne(fichier);
-    Etudiant *tab = tabEtudiants(fichier, NPL);
-    int tabsize = NPL[0] - 2;
-    Etudiant *tab2 = NULL;
-    int tab2Size = filtrerEtudiantsFiliere(tab,tabsize,8,&tab2);
-    afficheTabEtudiants(tab2,tab2Size);
+    Etudiant *etud = tabEtudiants(fichier,fichierNote,NPL);
+    AfficheEtudiant(etud[1]);
+    EditEtudiant(&etud[1],&fichier,&fichierNote);
     
-
+    
+    
+    
     fclose(fichier);
     printf("\033[0;37m");
     return 0;
