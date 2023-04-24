@@ -1,6 +1,10 @@
 -----------------------------------------------------------------------------------------------------------------------
 | Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne  |
 |----------------|----------------|--------|-------------------|--------|--------------|------------|------|----------|
-|bruh1           |bruh1           |0131177 |  1/Janvier  /1    |  SMC   |    Master    | Redoublant | Grp2 |  00.000  |
-|bruh2           |bruh2           |0231239 |  2/Fevrier  /2    |  SMP   |    Doctorat  | ~~~~~~~~~~ | Grp2 |  05.167  |
-|bruh3           |bruh3           |0331344 |  3/Mars     /3    |  SMP   |    License   | ~~~~~~~~~~ | Grp2 |  05.167  |
+|TeestQ          |TestQ           |1017548 | 10/Octobre  /2010 |  SMI   |    Doctorat  | Redoublant | Grp3 |  12.500  |
+|TestR           |TestR           |1217829 | 12/Decembre /2012 |  SMA   |    License   | ~~~~~~~~~~ | Grp2 |  15.000  |
+|TestS           |TestS           |1117917 | 11/Novembre /2011 |  SMIA  |    Master    | Redoublant | Grp4 |  00.000  |
+|TestT           |TestT           |0917998 |  9/Septembre/2009 |  SVTU  |    Master    | ~~~~~~~~~~ | Grp5 |  00.000  |
+|TestU           |TestU           |1220526 | 12/Decembre /12   |  SMP   |    Doctorat  | Redoublant | Grp2 |  13.000  |
+|TestV           |Test            |0120709 |  1/Janvier  /2001 |  STU   |    Master    | ~~~~~~~~~~ | Grp5 |  14.333  |
+|Test            |Test            |0120433 |  1/Janvier  /2001 |  SMC   |    License   | Redoublant | Grp1 |  00.000  |
