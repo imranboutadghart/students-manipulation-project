@@ -1,0 +1,1 @@
+Deubug results: -problem f marks handeling(editfileetudiant),problem deleting sepecifically the last student li f file, RechercheEtudiant_Nom_Prenom basically doesnt work, TrierEtudiants doent work hh (possibly ymken dak **destinationTabPtrs wasnt correctly initialized)

@@ -1,0 +1,12 @@
+----------------------------------------------------------------------------------------------------------------------
+| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
+|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
+|Imran           |Boutadghart     |0124509 |  1/Janvier  /2001 |  SMI   |    License   |  Admis(e)  | Grp2 | 18.000  |
+|Youssef         |Ke3ke3          |1202522 | 12/Decembre /2012 |  SMA   |    Master    |  Admis(e)  | Grp3 | 00.000  |
+|Test            |Teest           |2068046 | 20/Decembre /2020 |  SMA   |    Doctorat  |  Admis(e)  | Grp6 | 00.000  |
+|Imran           |Boutadghart     |0124509 |  1/Janvier  /2001 |  SMI   |    License   |  Admis(e)  | Grp2 | 18.000  |
+|Youssef         |Ke3ke3          |1202522 | 12/Decembre /2012 |  SMA   |    Master    |  Admis(e)  | Grp3 | 00.000  |
+|Test            |Teest           |2068046 | 20/Decembre /2020 |  SMA   |    Doctorat  |  Admis(e)  | Grp6 | 00.000  |
+|Imran           |Boutadghart     |0124509 |  1/Janvier  /2001 |  SMI   |    License   |  Admis(e)  | Grp2 | 18.000  |
+|Youssef         |Ke3ke3          |1202522 | 12/Decembre /2012 |  SMA   |    Master    |  Admis(e)  | Grp3 | 00.000  |
+|Test            |Teest           |2068046 | 20/Decembre /2020 |  SMA   |    Doctorat  |  Admis(e)  | Grp6 | 00.000  |
