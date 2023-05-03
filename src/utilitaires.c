@@ -178,7 +178,9 @@ void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,sh
         // RechercheEtudiant_Nom_Prenom(fichier);
         break;
     case 5:
-        trierEtudiants(tableauEtudiants,taille);
+        unsigned int desTabSize;
+        Etudiant *desTab = trierEtudiants(tableauEtudiants,taille,&desTabSize);
+        afficheTabEtudiants(desTab,desTabSize);
         break;
     case 6:
         exit(0);

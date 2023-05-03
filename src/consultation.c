@@ -249,7 +249,7 @@ void afficheTabEtudiants(Etudiant *tab,short size){
     AfficheTabHeader();
     for (short i = 0; i < size; i++)
     {
-        printf("\t\t     |\033[0;34m%-3d\033[0;33m",tab[i].line-2);
+        printf("\t\t     |\033[0;34m%-3d\033[0;33m",i+1);
         printf("|\033[0;32m%-16.*s\033[0;33m", 16, tab[i].nom);
         printf("|\033[0;32m%-16.*s\033[0;33m", 16, tab[i].prenom);
         printf("|\033[0;32m%07i \033[0;33m", tab[i].numApogee);
@@ -272,8 +272,8 @@ void afficheTabEtudiants(Etudiant *tab,short size){
 
 // Lire les notes des etudiants a partir du fichier des notes
 void lireNoteFichier(FILE *fichierNote, Etudiant *etud, short linenbr) {
-    fseek(fichierNote, 0, SEEK_SET);
-    short nbr = 2;
+    rewind(fichierNote);
+    short nbr = 1;
     unsigned int tmp_apogee = 0;
     char a;
     char tmp_nom[17], tmp_prenom[17];
@@ -317,7 +317,7 @@ Etudiant lireEtudiantFichier(FILE* fichier , FILE *fichierNote,int line) { //!!!
     // Mise du curseur au debut de la ligne convenable
     fseek(fichier,line,SEEK_SET);
     // Lecture des donnees a partir du tableau
-    fscanf(fichier,"|%16[^|]|%16[^|]|%07i |%2hu/%9s /%4hu |%s |%s |%s | Grp%2hu |%f|", etud.nom, etud.prenom,&etud.numApogee,&etud.date_inscription.jour,mois,&etud.date_inscription.annee,filiere,formation_,redoublant,&etud.G_TD,&etud.moyenne);
+    fscanf(fichier,"|%16[^|]|%16[^|]|%d |%2hu/%10s /%4hu |%s |%s |%s | Grp%2hu |%f|", etud.nom, etud.prenom,&etud.numApogee,&etud.date_inscription.jour,mois,&etud.date_inscription.annee,filiere,formation_,redoublant,&etud.G_TD,&etud.moyenne);
     // Association de la chaine de caractere lise au champ convenable (mois,filiere,formation,redoublant)
     for (int i = 1; i < 13; i++){
         if (strcmp(mois,nomMois[i]) == 0){
@@ -343,10 +343,11 @@ Etudiant lireEtudiantFichier(FILE* fichier , FILE *fichierNote,int line) { //!!!
     etud.notes =(float *)malloc(MAX_NOTES * sizeof(float));
     etud.nbnotes = 0;
     // Calcul du numero de la ligne apartir de la position du curseur
-    etud.line = (line/_Line);
-    lireNoteFichier(fichierNote, &etud, etud.line+2);
+    etud.line = (line/_Line) +1;
+    lireNoteFichier(fichierNote, &etud, etud.line);
     return etud;
 }
+
 
 // Afficher l'entete du tableau sur le fichier
 void TabHeader(FILE *fichier)

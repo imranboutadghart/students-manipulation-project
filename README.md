@@ -1,2 +1,2 @@
 SCHOOL PROJECT
-readme to be updated '='
+readme to be updated '_'

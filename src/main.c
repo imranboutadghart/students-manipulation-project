@@ -8,6 +8,7 @@
 #include "../headers/modification.h"
 #include "../headers/recherche.h"
 #include "../headers/suppression.h"
+#include "../headers/triage.h"
 
 int main(void)
 {
@@ -42,10 +43,15 @@ int main(void)
         unsigned int *NPL = NombrePositionLigne(fichier);
         unsigned int tabSize = NPL[0] - 2;
         Etudiant *tabEtuds = tabEtudiants(fichier, fichierNote, NPL);
+        Etudiant *tmpTabEtuds;
+        unsigned int tmpTabSize;
 
     //     MenuPrincipal(tabEtuds, fichier, fichierNote, tabSize);
-    // }
-        
+    //}
+    afficheTabEtudiants(tabEtuds,tabSize);
+    tmpTabEtuds = trierEtudiants(tabEtuds,tabSize,&tmpTabSize);
+    afficheTabEtudiants(tmpTabEtuds,tmpTabSize);
+    
     // editEtudiantFile(&tabEtuds[0],&fichier,&fichierNote, tabSize);
-    AfficheEtudiant(tabEtuds[0]);
+    // AfficheEtudiant(tabEtuds[0]);
 }

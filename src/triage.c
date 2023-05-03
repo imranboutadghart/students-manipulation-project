@@ -8,7 +8,7 @@
 // Trier les etudiant par nom
 void trierTabEtudiantsParNom(Etudiant *tab, short size){
     Etudiant tmp;
-    for (short i = 0; i < size; i++)
+    for (short i = 0; i < size - 1; i++)
     {
         for (short j = i+1; j < size; j++)
         {
@@ -23,9 +23,9 @@ void trierTabEtudiantsParNom(Etudiant *tab, short size){
 }
 
 // Trier les etudiant par prenom
-void trierTabEtudiantsParPreom(Etudiant *tab, short size){
+void trierTabEtudiantsParPrenom(Etudiant *tab, short size){
     Etudiant tmp;
-    for (short i = 0; i < size; i++)
+    for (short i = 0; i < size - 1; i++)
     {
         for (short j = i+1; j < size; j++)
         {
@@ -42,7 +42,7 @@ void trierTabEtudiantsParPreom(Etudiant *tab, short size){
 // Trier les etudiant selon le numero apgee
 void trierTabEtudiantsParApogee(Etudiant *tab, short size){
     Etudiant tmp;
-    for (short i = 0; i < size; i++)
+    for (short i = 0; i < size - 1; i++)
     {
         for (short j = i+1; j < size; j++)
         {
@@ -59,7 +59,7 @@ void trierTabEtudiantsParApogee(Etudiant *tab, short size){
 // Trier les etudiant selon la moyenne
 void trierTabEtudiantsParMoyenne(Etudiant *tab, short size){
     Etudiant tmp;
-    for (short i = 0; i < size; i++)
+    for (short i = 0; i < size - 1; i++)
     {
         for (short j = i+1; j < size; j++)
         {
@@ -76,7 +76,7 @@ void trierTabEtudiantsParMoyenne(Etudiant *tab, short size){
 // Trier les etudiant par date d'inscription
 void trierTabEtudiantsParDate(Etudiant *tab, short size){
     Etudiant tmp;
-    for (short i = 0; i < size; i++)
+    for (short i = 0; i < size - 1; i++)
     {
         for (short j = i+1; j < size; j++)
         {
@@ -181,12 +181,22 @@ short filtrerEtudiantsG_TD(Etudiant *originalTab,short originalTabSize,short G_T
 }
 
 // Trier les etudiants selon un critere specifie par l'utilisateur
-void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
+Etudiant *trierEtudiants(Etudiant *tableauEtudiants,short tailleTab,unsigned int *desTabSize){
     short reponse;
-    Etudiant *destinationTabPtr[MAX_CARACTERE];
+    Etudiant *destinationTabPtr = (Etudiant *)malloc(tailleTab*sizeof(Etudiant));
+    *desTabSize = tailleTab;
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n"); 
     printf("\t\t\t\t\t\t+\033[0;33m Comment voulez-vous trier les donnees presentees dans le fichier:\t\033[0;36m+\n");
-    printf("\t\t\t\t\t\t+\033[0;33m 1- Trier par nom.\t\t\t\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 2- Trier par prenom.\033[0;36m\t\t\t\t\t\t\t+\n\t\t\t\t\t\t+\033[0;33m 3- Trier par numero apogee.\t\t\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 4- Trier par moyenne.\t\t\t\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 5- Trier par la date d'inscription.\t\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 6- Afficher les etudiants d'une filiere.\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 7- Trier par niveau de formation.\t\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 8- Filtrer les etudiants selon l'admission.\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 9- Afficher les etudiants d'un groupe de TD.\t\t\t\t\033[0;36m+\n\t\t\t\t\t\t+\033[0;33m 10- Annuler.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 1- Trier par nom.\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 2- Trier par prenom.\033[0;36m\t\t\t\t\t\t\t+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 3- Trier par numero apogee.\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 4- Trier par moyenne.\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 5- Trier par la date d'inscription.\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 6- Afficher les etudiants d'une filiere.\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 7- Trier par niveau de formation.\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 8- Filtrer les etudiants selon l'admission.\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 9- Afficher les etudiants d'un groupe de TD.\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 10- Annuler.\t\t\t\t\t\t\t\t\033[0;36m+\n");
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n"); 
     do
     {
@@ -203,28 +213,52 @@ void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
     {
     case 1:
         trierTabEtudiantsParNom(tableauEtudiants,tailleTab);
+        for (int i = 0; i < tailleTab; i++)
+        {
+            destinationTabPtr[i] = tableauEtudiants[i];
+        }
         break;
     case 2:
-        trierTabEtudiantsParPreom(tableauEtudiants,tailleTab);
+        trierTabEtudiantsParPrenom(tableauEtudiants,tailleTab);
+        for (int i = 0; i < tailleTab; i++)
+        {
+            destinationTabPtr[i] = tableauEtudiants[i];
+        }
         break;
     case 3:
         trierTabEtudiantsParApogee(tableauEtudiants,tailleTab);
+        for (int i = 0; i < tailleTab; i++)
+        {
+            destinationTabPtr[i] = tableauEtudiants[i];
+        }
         break;
     case 4:
         trierTabEtudiantsParMoyenne(tableauEtudiants,tailleTab);
+        for (int i = 0; i < tailleTab; i++)
+        {
+            destinationTabPtr[i] = tableauEtudiants[i];
+        }
         break;
     case 5:
         trierTabEtudiantsParDate(tableauEtudiants,tailleTab);
+        for (int i = 0; i < tailleTab; i++)
+        {
+            destinationTabPtr[i] = tableauEtudiants[i];
+        }
         break;
     case 6:;
         char filiere[5];
         printf("\t\t\t\t\t\t\033[0;33m+Preciser la filiere dont vous souhaitez afficher ses etudians\n");
         printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
         scanf("%s",filiere);
+        for (int i = 0; i < strlen(filiere); i++)
+        {
+            if(filiere[i] >= 'a' && filiere[i] <= 'z')filiere[i]-= 32;
+        }
         printf("\033[0;36m");
         for (short i = 1; i < 10; i++){
             if (strcmp(filiere,Filieres[i]) == 0){
-                filtrerEtudiantsFiliere(tableauEtudiants,tailleTab,i,destinationTabPtr);
+                *desTabSize = filtrerEtudiantsFiliere(tableauEtudiants,tailleTab,i,&destinationTabPtr);
             }
         }
         break;
@@ -233,9 +267,13 @@ void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
         printf("\t\t\t\t\t\t\033[0;33m+Preciser le niveau de formation selon lequelle vous souhaitez trier ses etudians\n");
         printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
         scanf("%s",formation);
+        for (int i = 0; i < strlen(formation); i++)
+        {
+            if(formation[i] >= 'a' && formation[i] <= 'z')formation[i]-= 32;
+        }
         for (int i = 1; i < 4; i++){
             if (strcmp(formation,Formations[i]) == 0){
-                filtrerEtudiantsFormation(tableauEtudiants,tailleTab,i,destinationTabPtr);
+                *desTabSize = filtrerEtudiantsFormation(tableauEtudiants,tailleTab,i,&destinationTabPtr);
             }
         }
         break;
@@ -245,10 +283,10 @@ void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
         printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
         scanf("%hd",&choix);
         if ( choix == 1){
-            filtrerEtudiantsRedoublant(tableauEtudiants,tailleTab,faux,destinationTabPtr);
+            *desTabSize = filtrerEtudiantsRedoublant(tableauEtudiants,tailleTab,faux,&destinationTabPtr);
         }
         else{
-            filtrerEtudiantsRedoublant(tableauEtudiants,tailleTab,vrai,destinationTabPtr);
+            *desTabSize = filtrerEtudiantsRedoublant(tableauEtudiants,tailleTab,vrai,&destinationTabPtr);
         }
         break;
     case 9:;
@@ -259,7 +297,7 @@ void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
             printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
             scanf("%hd",&gtd);
         } while (!(gtd < 100));
-        filtrerEtudiantsG_TD(tableauEtudiants,tailleTab,gtd,destinationTabPtr);
+        *desTabSize = filtrerEtudiantsG_TD(tableauEtudiants,tailleTab,gtd,&destinationTabPtr);
         break;
     case 10:
         break;
@@ -268,5 +306,6 @@ void trierEtudiants(Etudiant *tableauEtudiants,short tailleTab){
         Erreur(3);
         break;
     }
+    return destinationTabPtr;
 
 }
