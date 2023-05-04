@@ -12,6 +12,6 @@
 
 extern void editNotes(Etudiant*);
 extern void editEtudiantFile(Etudiant* ,FILE** ,FILE** ,short);
-extern void EditEtudiant(Etudiant* ,FILE** ,FILE**);
+extern void EditEtudiant(Etudiant*);
 
 #endif /*EDIT_H*/

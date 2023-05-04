@@ -47,10 +47,8 @@ void editEtudiantFile(Etudiant* tab_etud, FILE **fichier, FILE **fichierNote, sh
         printf("+ \033[0;32m=>");
         scanf("%hd", &num);
     } while (num <= 0 || num > tab_size);
-    
-    EditEtudiant(&tab_etud[num-1], fichier, fichierNote);
+    EditEtudiant(&tab_etud[num-1]);
     afficheTabEtudiants(tab_etud, tab_size);
-    
     for (int i = 0; i < tab_size ; i++){
         SauvegardeEtudiant(tab_etud[i], tmp, tmp_notes);
     }
@@ -73,7 +71,7 @@ void editEtudiantFile(Etudiant* tab_etud, FILE **fichier, FILE **fichierNote, sh
 }
 
 // Modifier les donnees de l'etudiant
-void EditEtudiant(Etudiant *etud,FILE **fichier, FILE **fichierNote){ 
+void EditEtudiant(Etudiant *etud){ 
     short int choix;
     Bool bool = 0;
     do{

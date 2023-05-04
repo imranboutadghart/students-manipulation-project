@@ -1,8 +1,0 @@
-----------------------------------------------------------------------------------------------------------------------
-| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
-|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
-|Bruh            |Test1           |1209247 | 12/Decembre /2012 |  SMPC  |    License   | Redoublant | Grp2 | 10.000  |
-|Test2           |Bruh            |1009476 | 10/Octobre  /2010 |  SMC   |    Master    | ~~~~~~~~~~ | Grp2 | 00.000  |
-|Test3           |Test3           |1209558 | 12/Decembre /2012 |  SMP   |    Doctorat  | Redoublant | Grp3 | 17.500  |
-|Test4           |Test4           |2010799 | 15/Octobre  /2020 |  SV    |    Master    | Redoublant | Grp2 | 00.000  |
-|Test5           |Test5           |1114907 | 11/Novembre /2011 |  SMA   |    Master    | Redoublant | Grp6 | 12.167  |

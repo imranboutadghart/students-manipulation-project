@@ -16,6 +16,10 @@
 extern unsigned int* NombrePositionLigne(FILE*);
 extern void AfficheLigne(FILE*,unsigned int);
 extern void AfficheTabLignes(FILE*,short*);
+extern void RechercheEtudiant(Etudiant *, unsigned int);
+extern void chercherNomPrenom(Etudiant *,unsigned int);
+extern void chercherAnnee(Etudiant *,unsigned int);
+extern void chercherApogee(Etudiant *,unsigned int);
 
 
 #endif /*SEARCH_H*/

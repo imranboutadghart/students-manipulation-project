@@ -56,10 +56,10 @@ void Erreur(short error) {
 }
 
 // Lire le nom des deux fichiers a partir de l'utilisateur 
-void LireNomFichiers(FILE **fichier, FILE **fichier_note) {
+void LireNomFichiers(FILE **fichier, FILE **fichier_note){
     char nom_fichier[MAX_CARACTERE];
-    char nom_fichier_note[MAX_CARACTERE];
-    char data_path[MAX_CARACTERE];
+    char nom_fichier_note[MAX_CARACTERE+15];
+    char data_path[MAX_CARACTERE+10];
 
     printf("\n\t\t\t\t\033[0;33m+- Entrer le nom du fichier dont vous voulez travailler: ");
     scanf("%s", nom_fichier);
@@ -131,15 +131,19 @@ void Lancement(void){
     if (reponse == faux){exit(0);}// Quitter le programme
     ClearConsole(1);
 }
-
-void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,short  taille){
+void test(int i){printf("\033[31m %d \033[0m\n",i);}
+void MenuPrincipal(Etudiant *tableauEtudiants,FILE **fichier,FILE **fichierNote,short  taille){
     short reponse;
     Bool res;
-    printf("\t==>names:%s\t%s\n",FICHIERDATA,FICHIERNOTES);
     afficheTabEtudiants(tableauEtudiants,taille);
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     printf("\t\t\t\t\t\t+\033[0;33m Que souhaitez-vous faire ?    \t\t\t\t\t\033[0;36m+\n");
-    printf("\t\t\t\t\t\t+\033[0;33m 1- Ajouter des etudiants dans le fichier.\t\t\t        \033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 2- Modifier les informations d'un etudiant.\t\t\t\t\033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 3- Supprimer un etudiant du fichier.\t\t\t\t\t\033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 4- Rechercher un ou des etudiants par nom ou prenom      \033[0;36m\t\t+\n \t\t\t\t\t\t+\033[0;33m 5- Trier les etudiant selon des criteres specifiques.\033[0;36m\t\t\t+\n\t\t\t\t\t\t+\033[0;33m 6- Quitter l'application.\033[0;36m\t\t\t\t\t\t+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 1- Ajouter des etudiants dans le fichier.\t\t\t        \033[0;36m+\n");
+    printf(" \t\t\t\t\t\t+\033[0;33m 2- Modifier les informations d'un etudiant.\t\t\t\t\033[0;36m+\n");
+    printf("  \t\t\t\t\t\t+\033[0;33m 3- Supprimer un etudiant du fichier.\t\t\t\t\t\033[0;36m+\n");
+    printf("   \t\t\t\t\t\t+\033[0;33m 4- Rechercher un ou des etudiants par nom ou prenom      \033[0;36m\t\t+\n");
+    printf("    \t\t\t\t\t\t+\033[0;33m 5- Trier les etudiant selon des criteres specifiques.\033[0;36m\t\t\t+\n");
+    printf("    \t\t\t\t\t\t+\033[0;33m 6- Quitter l'application.\033[0;36m\t\t\t\t\t\t+\n");
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     do
     {
@@ -156,13 +160,13 @@ void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,sh
     case 1:
         do{
             Etudiant etudiant_;
-            LireEtudiant(&etudiant_,fichier,fichierNote);
+            LireEtudiant(&etudiant_,*fichier,*fichierNote);
             printf("Ajouter un autre etudiant ? (O/N)\n");
             lireBool(&res);
         } while (res != faux);
         break;
     case 2:
-        editEtudiantFile(tableauEtudiants,&fichier,&fichierNote,taille);
+        editEtudiantFile(tableauEtudiants,fichier,fichierNote,taille);
         break;
     case 3:;
         short num;
@@ -172,10 +176,10 @@ void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,sh
             printf("+ \033[0;32m=>");
             scanf("%hd", &num);
         } while (num <= 0 || num > taille);
-        suprimerEtudiant(&fichier,&fichierNote,tableauEtudiants[num]);
+        suprimerEtudiant(fichier,fichierNote,tableauEtudiants[num-1]);
         break;
     case 4:
-        // RechercheEtudiant_Nom_Prenom(fichier);
+        RechercheEtudiant(tableauEtudiants,taille);
         break;
     case 5:
         unsigned int desTabSize;
@@ -190,4 +194,9 @@ void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,sh
         Erreur(3);
         break;
     }
+    free(tableauEtudiants);
+    unsigned int *NPL = NombrePositionLigne(*fichier);
+    tableauEtudiants = tabEtudiants(*fichier,*fichierNote,NPL);
+    taille = NPL[0] - 2;
+    MenuPrincipal(tableauEtudiants,fichier,fichierNote,taille);
 }

@@ -284,14 +284,15 @@ void lireNoteFichier(FILE *fichierNote, Etudiant *etud, short linenbr) {
     char *line =(char *)malloc((_Line+11)*sizeof(char));
     fgets(line,_Line+10,fichierNote);
     float *tab = malloc(6*sizeof(float));
-    sscanf(line, "|%16[^|]|%16[^|]|%07i | %f | %f | %f | %f | %f | %f |", tmp_nom, tmp_prenom, &tmp_apogee, &tab[0], &tab[1], &tab[2], &tab[3], &tab[4], &tab[5]);
+    sscanf(line, "|%16[^|]|%16[^|]|%d | %f | %f | %f | %f | %f | %f |", tmp_nom, tmp_prenom, &tmp_apogee, &tab[0], &tab[1], &tab[2], &tab[3], &tab[4], &tab[5]);
     int i = 0;
-    for ( ; i < MAX_NOTES;++i)
+    for ( ; i < MAX_NOTES;)
     {
         if (-11111.0 == tab[i])
         {
             break;
         }
+        ++i;
     }
     if (0 == i){
         free(tab);
@@ -402,12 +403,7 @@ void sauvgardeNotes(Etudiant etud,FILE *fichierNote){ //!!!
     {
         if (i < etud.nbnotes)
         {
-            if (etud.notes[i] < 10){
-                fprintf(fichierNote, " 0%5.3f |",etud.notes[i]);
-            }
-            else{
-                fprintf(fichierNote, " %05.3f |",etud.notes[i]);
-            }
+            fprintf(fichierNote, " %06.3f |",etud.notes[i]);
         }
         else
         {

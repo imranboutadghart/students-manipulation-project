@@ -251,7 +251,7 @@ Etudiant *trierEtudiants(Etudiant *tableauEtudiants,short tailleTab,unsigned int
         printf("\t\t\t\t\t\t\033[0;33m+Preciser la filiere dont vous souhaitez afficher ses etudians\n");
         printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
         scanf("%s",filiere);
-        for (int i = 0; i < strlen(filiere); i++)
+        for (unsigned int i = 0; i < strlen(filiere); i++)
         {
             if(filiere[i] >= 'a' && filiere[i] <= 'z')filiere[i]-= 32;
         }
@@ -267,7 +267,7 @@ Etudiant *trierEtudiants(Etudiant *tableauEtudiants,short tailleTab,unsigned int
         printf("\t\t\t\t\t\t\033[0;33m+Preciser le niveau de formation selon lequelle vous souhaitez trier ses etudians\n");
         printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
         scanf("%s",formation);
-        for (int i = 0; i < strlen(formation); i++)
+        for (unsigned int i = 0; i < strlen(formation); i++)
         {
             if(formation[i] >= 'a' && formation[i] <= 'z')formation[i]-= 32;
         }
