@@ -17,11 +17,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
 
 # Règle de construction pour l'exécutable
 etudgate: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(OBJDIR)/etudgate
+	$(CC) $(CFLAGS) $(OBJ) -o etudgate
 
 # Règle de nettoyage pour supprimer les fichiers objets et l'exécutable
 clean:
-	rm -f $(OBJDIR)/*.o $(OBJDIR)/etudgate
+	rm -f $(OBJDIR)/*.o etudgate
 	
 # référence des variables
 # $@ : nom de fichier de la cible de la règle.

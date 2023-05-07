@@ -41,6 +41,8 @@ int main(void){
         unsigned int tabTaille  = NPL[0] - 2;
         Etudiant *tab_etudiants = tabEtudiants(fichier, fichierNote, NPL);
         MenuPrincipal(tab_etudiants, &fichier, &fichierNote, tabTaille );
+        printf("\033[0;33m");
     }
+    fermeture();
     return 0;
 }

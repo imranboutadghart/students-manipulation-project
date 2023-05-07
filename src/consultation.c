@@ -10,8 +10,9 @@
 // Lire une booleenne (o-O/n-N)
 void lireBool(Bool *bool){
     char tmp;
+    fflush(stdin);
+    entrerDonnee();
     do{
-        entrerDonnee();
         scanf("%c", &tmp);
         if (tmp == 'o' || tmp == 'O'){
             *bool = vrai;
@@ -19,6 +20,11 @@ void lireBool(Bool *bool){
         else if (tmp == 'n' || tmp == 'N'){
             *bool = faux;
         }
+        else{
+            printf("\n");
+            entrerDonnee();
+        }
+        
     } while (!(tmp == 'o' || tmp == 'O' || tmp == 'n' || tmp == 'N'));
 }
 

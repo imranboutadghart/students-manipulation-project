@@ -57,6 +57,8 @@ void editEtudiantFile(Etudiant* tab_etud, FILE **fichier, FILE **fichierNote, sh
         SauvegardeEtudiant(tab_etud[i], tmp, tmp_notes);
     }
     printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m (+) Votre modification a ete sauvegarde avec succes.\n");
+    sleep(2);
+    ClearConsole(0);
     fclose(*fichier);
     fclose(*fichierNote);
     fclose(tmp);

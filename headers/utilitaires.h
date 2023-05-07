@@ -16,5 +16,7 @@ extern void LireNomFichiers(FILE**, FILE**);
 extern void PrintAsciiArt(void);
 extern void Lancement(void);
 extern void MenuPrincipal(Etudiant*,FILE**,FILE**,short);
+extern void AfficherCopyright(void);
+extern void fermeture(void);
 
 #endif /*UTILITIES_H*/
