@@ -4,6 +4,7 @@
 #include "../headers/suppression.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 // Supprimer un etudiant du fichier
 void suprimerEtudiant(FILE **fichier, FILE **fichierNote,Etudiant etud){
@@ -28,7 +29,6 @@ void suprimerEtudiant(FILE **fichier, FILE **fichierNote,Etudiant etud){
     rename("data/tmp.txt", FICHIERDATA);
     *fichier = fopen(FICHIERDATA,"a+");
     TesterFichier(*fichier);
-    
     tmp = fopen("data/tmp.txt","w+");
     if (tmp == NULL){Erreur(3);return;}
     rewind(*fichierNote);
@@ -42,12 +42,11 @@ void suprimerEtudiant(FILE **fichier, FILE **fichierNote,Etudiant etud){
             fputc(ch, tmp);
         }
     }
-
-    printf("(+) Student's data has been deleted successfully\n");
     fclose(*fichierNote);
     fclose(tmp);
     remove(FICHIERNOTES);
     rename("data/tmp.txt", FICHIERNOTES);
     *fichierNote = fopen(FICHIERNOTES,"a+");  
     TesterFichier(*fichierNote);
+    printf("(+) Student's data has been deleted successfully\n");
 }

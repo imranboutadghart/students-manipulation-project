@@ -4,6 +4,7 @@
 #include "../headers/suppression.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 // Trier les etudiant par nom
 void trierTabEtudiantsParNom(Etudiant *tab, short size){
@@ -112,11 +113,8 @@ void trierTabEtudiantsParDate(Etudiant *tab, short size){
 short filtrerEtudiantsFiliere(Etudiant *originalTab,short originalTabSize,short filiere,Etudiant **destinationTabPtr){
     Etudiant *destinationTab = NULL;
     short index=0;
-    for (short i = 0; i < originalTabSize; ++i)
-    {
-        if (originalTab[i].filiere == filiere)
-        {
-
+    for (short i = 0; i < originalTabSize; ++i){
+        if (originalTab[i].filiere == filiere){
             destinationTab = realloc(destinationTab,(index+1)* sizeof(Etudiant));
             destinationTab[index] = originalTab[i];
             index++;
@@ -200,88 +198,111 @@ Etudiant *trierEtudiants(Etudiant *tableauEtudiants,short tailleTab,unsigned int
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n"); 
     do
     {
-        printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
-        scanf("%hd",&reponse);
-        printf("\033[0;33m");
-        if (reponse < 1 || reponse > 10)
-        {
-            printf("\t\t\t\t\t\t");
-            Erreur(0);
+        entrerDonnee();
+        if (scanf("%hd", &reponse) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+            Erreur(3);
+            while (getchar() != '\n');  // Effacer le tampon d'entrée
         }
+        if (reponse < 1 || reponse > 10) Erreur(4);
     } while (!(reponse > 0 && reponse <= 10));
     switch (reponse)
     {
     case 1:
         trierTabEtudiantsParNom(tableauEtudiants,tailleTab);
-        for (int i = 0; i < tailleTab; i++)
-        {
+        for (int i = 0; i < tailleTab; i++){
             destinationTabPtr[i] = tableauEtudiants[i];
         }
         break;
     case 2:
         trierTabEtudiantsParPrenom(tableauEtudiants,tailleTab);
-        for (int i = 0; i < tailleTab; i++)
-        {
+        for (int i = 0; i < tailleTab; i++){
             destinationTabPtr[i] = tableauEtudiants[i];
         }
         break;
     case 3:
         trierTabEtudiantsParApogee(tableauEtudiants,tailleTab);
-        for (int i = 0; i < tailleTab; i++)
-        {
+        for (int i = 0; i < tailleTab; i++){
             destinationTabPtr[i] = tableauEtudiants[i];
         }
         break;
     case 4:
         trierTabEtudiantsParMoyenne(tableauEtudiants,tailleTab);
-        for (int i = 0; i < tailleTab; i++)
-        {
+        for (int i = 0; i < tailleTab; i++){
             destinationTabPtr[i] = tableauEtudiants[i];
         }
         break;
     case 5:
         trierTabEtudiantsParDate(tableauEtudiants,tailleTab);
-        for (int i = 0; i < tailleTab; i++)
-        {
+        for (int i = 0; i < tailleTab; i++){
             destinationTabPtr[i] = tableauEtudiants[i];
         }
         break;
     case 6:;
-        char filiere[5];
-        printf("\t\t\t\t\t\t\033[0;33m+Preciser la filiere dont vous souhaitez afficher ses etudians\n");
-        printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
-        scanf("%s",filiere);
-        for (int i = 0; i < strlen(filiere); i++)
-        {
-            if(filiere[i] >= 'a' && filiere[i] <= 'z')filiere[i]-= 32;
-        }
-        printf("\033[0;36m");
+        short filiere;
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Preciser la filiere dont vous souhaitez afficher ses etudians (1-9):\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 1: SMPC. \t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 2: SMC.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 3: SMP.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 4: STU.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 5: SV.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 6: SVTU.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 7: SMIA.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 8: SMA.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 9: SMI.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        do{
+            entrerDonnee();
+            if (scanf("%hd", &filiere) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+                Erreur(3);
+                while (getchar() != '\n');  // Effacer le tampon d'entrée
+            }
+            if (filiere < 1 || filiere > 9) Erreur(3);
+        } while (filiere < 1 || filiere > 9);
         for (short i = 1; i < 10; i++){
-            if (strcmp(filiere,Filieres[i]) == 0){
+            if (strcmp(Filieres[filiere],Filieres[i]) == 0){
                 *desTabSize = filtrerEtudiantsFiliere(tableauEtudiants,tailleTab,i,&destinationTabPtr);
             }
         }
         break;
     case 7:;
-        char formation[10];
-        printf("\t\t\t\t\t\t\033[0;33m+Preciser le niveau de formation selon lequelle vous souhaitez trier ses etudians\n");
-        printf("\t\t\t\t\t\t\033[0;33m+\033[0;32m=>");
-        scanf("%s",formation);
-        for (int i = 0; i < strlen(formation); i++)
-        {
-            if(formation[i] >= 'a' && formation[i] <= 'z')formation[i]-= 32;
-        }
-        for (int i = 1; i < 4; i++){
-            if (strcmp(formation,Formations[i]) == 0){
+        short formation;
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+Preciser le niveau de formation selon lequelle vous souhaitez trier ses etudians\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Choisir le niveau de formation de l'etudiant (1-3)\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 1: License. \t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 2: Master.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 3: Doctorat.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        do{
+            entrerDonnee();
+            if (scanf("%hd", &formation) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+                Erreur(3);
+                while (getchar() != '\n');  // Effacer le tampon d'entrée
+            }
+        if (formation < 1 || formation > 3) Erreur(3);
+        } while (formation < 1 || formation > 9);
+        for (short i = 1; i < 4; i++){
+            if (strcmp(Formations[formation] ,Formations[i]) == 0){
                 *desTabSize = filtrerEtudiantsFormation(tableauEtudiants,tailleTab,i,&destinationTabPtr);
             }
         }
         break;
     case 8:;
         short choix;
-        printf("\t\t\t\t\t\t\033[0;36m+Souhaitez-vous afficher :\n1- Les etudiants admis?\n2- Les redoublants?\n");
-        printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
-        scanf("%hd",&choix);
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Souhaitez-vous afficher :\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 1- Les etudiants admis?\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 2- Les redoublants?\t\t\t\t\t\t\t\033[0;36m+\n");
+        printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+        do{
+            entrerDonnee();
+            if (scanf("%hd", &choix) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+                Erreur(3);
+                while (getchar() != '\n');  // Effacer le tampon d'entrée
+            }
+        if (choix < 1 || choix > 2) Erreur(3);
+        } while (choix < 1 || choix > 2);
         if ( choix == 1){
             *desTabSize = filtrerEtudiantsRedoublant(tableauEtudiants,tailleTab,faux,&destinationTabPtr);
         }
@@ -291,15 +312,18 @@ Etudiant *trierEtudiants(Etudiant *tableauEtudiants,short tailleTab,unsigned int
         break;
     case 9:;
         short gtd;
-        printf("\t\t\t\t\t\t\033[0;36m+Enter le numero du groupe de TD a afficher ses etudians:\n");
-        do
-        {
-            printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
-            scanf("%hd",&gtd);
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Enter le numero du groupe de TD a afficher ses etudians:\n");
+        do{
+            entrerDonnee();
+            if (scanf("%hd", &gtd) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+                Erreur(3);
+                while (getchar() != '\n');  // Effacer le tampon d'entrée
+            }
         } while (!(gtd < 100));
         *desTabSize = filtrerEtudiantsG_TD(tableauEtudiants,tailleTab,gtd,&destinationTabPtr);
         break;
     case 10:
+        destinationTabPtr = NULL;
         break;
     
     default:

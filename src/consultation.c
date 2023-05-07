@@ -7,23 +7,18 @@
 #include <time.h>
 #include <unistd.h> 
 
-
 // Lire une booleenne (o-O/n-N)
 void lireBool(Bool *bool){
     char tmp;
-    do
-    {
+    do{
+        entrerDonnee();
         scanf("%c", &tmp);
-        if (tmp == 'o' || tmp == 'O')
-        {
+        if (tmp == 'o' || tmp == 'O'){
             *bool = vrai;
         }
-        else if (tmp == 'n' || tmp == 'N')
-        {
+        else if (tmp == 'n' || tmp == 'N'){
             *bool = faux;
         }
-        
-        
     } while (!(tmp == 'o' || tmp == 'O' || tmp == 'n' || tmp == 'N'));
 }
 
@@ -49,16 +44,14 @@ Bool estDateValide(short jour, short mois, short annee) {
 // Saisie de la date
 void lireDate(Date *date){
     scanf("%hu %hu %hu",&date->jour,&date->mois,&date->annee);
-    if (date->annee<100)
-    {
+    if (date->annee<100){
         if(date->annee <50)date->annee +=2000;
         else if(date->annee >=50)date->annee +=1900;
     }
     
-    while (!estDateValide(date->jour, date->mois, date->annee))
-    {
+    while (!estDateValide(date->jour, date->mois, date->annee)){
         Erreur(0);
-        printf("\t\t\t\t+ \033[0;32m=>");
+        entrerDonnee();
         scanf("%hu %hu %hu", &date->jour, &date->mois, &date->annee);
     }
 }
@@ -76,35 +69,57 @@ unsigned int NombreAleatoire_7(short year) {
 
 // Sasie de la filiere de l'etudiant
 void FiliereEtudiant(Etudiant *etud){
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Choisir la filiere de l'etudiant (1-9): \t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 1: SMPC. \t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 2: SMC.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 3: SMP.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 4: STU.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 5: SV.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 6: SVTU.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 7: SMIA.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 8: SMA.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 9: SMI.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     do
     {
-        printf("\t\t\t\t\033[0;33m+ Saisir la filiere de l'etudiant: \n");
-        printf("\t\t\t\t+ 1: SMPC\n\t\t\t\t+ 2: SMC\n\t\t\t\t+ 3: SMP\n\t\t\t\t+ 4: STU\n\t\t\t\t+ 5: SV\n\t\t\t\t+ 6: SVTU\n\t\t\t\t+ 7: SMIA\n\t\t\t\t+ 8: SMA\n\t\t\t\t+ 9: SMI\n");
-        printf("\t\t\t\t+ \033[0;32m=>");
+        entrerDonnee();
         scanf("%hd",&etud->filiere);
+        if (etud->filiere < 1 || etud->filiere > 9){
+            Erreur(3);
+        }
+        
     } while (etud->filiere < 1 || etud->filiere > 9);
 }
 
 // Saisie du niveau de formation de l'etudiant
 void FormationEtudiant(Etudiant *etud){
-    do
-    {
-        printf("\033[0;33m+ Saisir le niveau de formation de l'etudiant\n+ 1: License\n+ 2: Master\n+ 3: Doctorat \n+ \033[0;32m=>");
-        scanf(" %hd",&etud->formation);
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Choisir le niveau de formation de l'etudiant (1-3)\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 1: License. \t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 2: Master.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m 3: Doctorat.\t\t\t\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    do{
+        entrerDonnee();
+        scanf("%hd",&etud->formation);
+        if (etud->formation < 1 || etud->formation > 3){
+            Erreur(3);
+        }
     }while(etud->formation<1 || etud->formation >3);
 }
 
 // Ajouter des notes si possible
 void AjouteNote(Etudiant *etud){
     Bool reponse = vrai;
-    printf("\033[0;33m+-------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     if (etud->nbnotes == MAX_NOTES) {
-        printf("+ Vous avez atteint le nombre maximal de notes.\n");
+        printf("\t\t\t\t\t\t\033[0;36m+ \033[0;31m(-) Vous avez atteint le nombre maximal de notes.\033[0;33m\n");
         return;
     }
     while (reponse != faux && etud->nbnotes < MAX_NOTES)
     {
-            printf("+ Saisir la note :\033[0;32m");
+            printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Saisir la note :\033[0;32m");
             scanf("%f",&etud->notes[etud->nbnotes]);
             printf("\033[0;33m");
             etud->nbnotes++;
@@ -113,13 +128,12 @@ void AjouteNote(Etudiant *etud){
         
         if (etud->nbnotes > MAX_NOTES)
         {
-            printf("+ Vous avez atteindre le nombre maximal des notes.\n");
+            printf("\t\t\t\t\t\t\033[0;36m+ \033[0;32m(-) Vous avez atteindre le nombre maximal des notes.\033[0;33m\n");
             break;
         }
         if (etud->nbnotes < MAX_NOTES)
         {
-            printf("+ Voulez-vous ajouter une note? (O/N)\n");
-            printf("+ \033[0;32m=>");
+            printf("\t\t\t\t\t\t\033[0;36m+ \033[0;33mVoulez-vous ajouter une note? (O/N)\n");
             lireBool(&reponse);
             printf("\033[0;33m");
         }
@@ -143,21 +157,17 @@ void AjouteNote(Etudiant *etud){
 
 // Convertir la chaîne de caractères nom de l'étudiant en minuscules,tout en maintenant la première lettre de chaque mot en majuscule
 void CapitaliserNom(char *string){
-    int length = strlen(string);
-    if (string[0] >= 'a' && string[0] <= 'z')
-    {
+    short length = strlen(string);
+    if (string[0] >= 'a' && string[0] <= 'z'){
         string[0] -= 32;
     }
-    for (int i = 1; i < length; i++)
-    {
+    for (short i = 1; i < length; i++){
         // Si le caractère est en minuscule (ASCII code >= 'a') et n'est pas un espace (ASCII code = 32)
-        if (string[i] >= 'A' && string[i] <= 'Z')
-        {
+        if (string[i] >= 'A' && string[i] <= 'Z'){
             string[i] += 32; // Convertir la lettre en majiscule
         }
         // Si le caractère précédent est un espace (donc début d'un nouveau mot)
-        if (string[i-1] == ' ') 
-        {
+        if (string[i-1] == ' ') {
             if (string[i] >= 'a')// convertir la première lettre du nouveau mot en majuscule en soustrayant 32 de son code ASCII
             {
                 string[i] -= 32; // Convertir la lettre en majiscule
@@ -173,40 +183,39 @@ void LireEtudiant(Etudiant *etud,FILE *fichier, FILE *fichierNote){
     etud->prenom = (char*)malloc(MAX_CARACTERE * sizeof(char));
     etud->nom = (char*)malloc(MAX_CARACTERE * sizeof(char));
     if (etud->nom == NULL || etud->prenom == NULL){Erreur(1);}
-    printf("\033[0;33m+-------------------------------------------------+\n");
-    printf("\033[0;33m+ Saisir le nom de l'etudiant : \033[0;32m");
-    scanf(" %100[^\n]s",etud->nom);
-    etud->nom = (char*)realloc(etud->nom,(strlen(etud->nom) + 1 ) * sizeof(char));
-    CapitaliserNom(etud->nom);
-    printf("\033[0;33m+ Saisir le prenom de l'etudiant : \033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Veulliez saisir le prenom de l'etudiant : \033[0;32m");
     scanf(" %100[^\n]s", etud->prenom);
     CapitaliserNom(etud->prenom);
     etud->prenom = (char*)realloc(etud->prenom,(strlen(etud->prenom) + 1 ) * sizeof(char));
-    printf("\033[0;33m+ Saisir la date d'inscription de l'etudiant (jj mm aa) : \033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Veulliez saisir le nom de l'etudiant : \033[0;32m");
+    scanf(" %100[^\n]s",etud->nom);
+    etud->nom = (char*)realloc(etud->nom,(strlen(etud->nom) + 1 ) * sizeof(char));
+    CapitaliserNom(etud->nom);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Veulliez saisir la date d'inscription de l'etudiant (jj mm aa) : \033[0;32m");
     lireDate(&etud->date_inscription);
     FiliereEtudiant(etud);
     int random = NombreAleatoire_7(etud->date_inscription.annee % 100);
     etud->numApogee = random; // Generer un numero d'appogee de 7 chiffres (2 premiers font reference a l'annee de l'inscription)
     FormationEtudiant(etud);
-    printf("\033[0;33m+ Est-ce-que l'etudiant est un redoublant?(O/N): \033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Est-ce-que l'etudiant est un redoublant?(O/N): \n");
     lireBool(&etud->redoublant);
-    printf("\033[0;33m+ Saisir le groupe de TD :\033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Veulliez saisir le groupe de TD :\033[0;32m");
     scanf("%hu",&etud->G_TD);
     etud->nbnotes = 0;
     etud->notes = (float*)calloc(MAX_NOTES, sizeof(float));
     etud->moyenne = 0;
     Bool tmp;
-    printf("\033[0;33m+ voulez vous ajouter des notes?(o/n) :\033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Voulez vous ajouter des notes?(o/n) :\n");
     lireBool(&tmp);
     if(tmp)AjouteNote(etud);
     SauvegardeEtudiant(*etud, fichier, fichierNote);
-    printf("\033[0;33m+-------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     ClearConsole(2);
 }
 
 // Afficher l'entete du tableau sur la console
-void AfficheTabHeader()
-{
+void AfficheTabHeader(){
     printf("\t\t     \033[0;33m+-------------------------------------------------------------------------------------------------------------------------+\n");
     printf("\t\t     | N | Nom            | Prenom         | Apogee | Date d'insciption | Filiere|  Formation   | Redoublant | G-TD | Moyenne  |\n");
     printf("\t\t     |---|----------------|----------------|--------|-------------------|--------|--------------|------------|------|----------|\n");
@@ -214,22 +223,22 @@ void AfficheTabHeader()
 
 // Afficher les donnees de l'etudiant
 void AfficheEtudiant(Etudiant etud){
-    printf("\t\t\t\t\033[0;33m+-------------------------------------------------+\n");
-    printf("\t\t\t\t+-Nom :\033[0;32m%s\n\033[0;33m",etud.nom);
-    printf("\t\t\t\t+-Preom :\033[0;32m%s\033[0;33m\n",etud.prenom);
-    printf("\t\t\t\t+-Numero d'apogee: \033[0;32m%07i\033[0;33m\n", etud.numApogee);
-    printf("\t\t\t\t+-Date d'inscription : \033[0;32m%hu/%s/%hu\033[0;33m\n", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
-    printf("\t\t\t\t+-Filiere : \033[0;32m%s\033[0;33m\n",Filieres[etud.filiere]);
-    printf("\t\t\t\t+-Niveau de formation : \033[0;32m%s \033[0;33m\n",Formations[etud.formation]);
-    if (etud.redoublant == 1){printf("\t\t\t\t+-L'etduiant est un \033[0;32mredoublant.\033[0;33m\n");}
-    else{printf("\t\t\t\t+-L'etduiant \033[0;32mn'est pas un redoublant.\033[0;33m\n");}
-    printf("\t\t\t\t+-Groupe de TD : \033[0;32m%d\033[0;33m\n",etud.G_TD);
-    printf("\t\t\t\t+-Les notes de l'etudiant :\033[0;32m");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Nom :\033[0;32m%16s\t\t\t\t\t\t\t\033[0;36m+\n",etud.nom);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Preom :\033[0;32m%16s\t\t\t\t\t\t\033[0;36m+\n",etud.prenom);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Numero d'apogee: \033[0;32m%07i\t\t\t\t\t\t\033[0;36m+\n", etud.numApogee);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Date d'inscription : \033[0;32m%2hu/%9s/%4hu\t\t\t\t\033[0;36m+\n", etud.date_inscription.jour, nomMois[etud.date_inscription.mois], etud.date_inscription.annee);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Filiere : \033[0;32m%4s\t\t\t\t\t\t\t\033[0;36m+\n",Filieres[etud.filiere]);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Niveau de formation : \033[0;32m%8s \t\t\t\t\t\033[0;36m+\n",Formations[etud.formation]);
+    if (etud.redoublant == 1){printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m L'etduiant est un \033[0;32mredoublant.\t\t\t\t\t\t\033[0;36m+\n");}
+    else{printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m L'etduiant \033[0;32mn'est pas un redoublant.\t\t\t\t\t\033[0;36m+\n");}
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Groupe de TD : \033[0;32m%2d\t\t\t\t\t\t\t\033[0;36m+\n",etud.G_TD);
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Les notes de l'etudiant : \033[0;32m");
     for (int i = 0; i < etud.nbnotes; i++){
-        printf("  \033[0;33m|\033[0;32m%.3f",etud.notes[i]);
+        printf("\033[0;33m|\033[0;32m%.3f",etud.notes[i]);
     }
-    printf("\n\t\t\t\t\033[0;33m+-La moyenne de l'etudiant : \033[0;32m%f\n",etud.moyenne);
-    printf("\t\t\t\t\033[0;33m+-------------------------------------------------+\n");
+    printf("\n\t\t\t\t\t\t\033[0;36m+\033[0;33m La moyenne de l'etudiant : \033[0;32m%.3f\t\t\t\t\t\033[0;36m+\n",etud.moyenne);
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
 }
 
 // Appelée quand le programme est lancée, retourne un tableau de tous les etudiants du fichier
@@ -284,14 +293,15 @@ void lireNoteFichier(FILE *fichierNote, Etudiant *etud, short linenbr) {
     char *line =(char *)malloc((_Line+11)*sizeof(char));
     fgets(line,_Line+10,fichierNote);
     float *tab = malloc(6*sizeof(float));
-    sscanf(line, "|%16[^|]|%16[^|]|%07i | %f | %f | %f | %f | %f | %f |", tmp_nom, tmp_prenom, &tmp_apogee, &tab[0], &tab[1], &tab[2], &tab[3], &tab[4], &tab[5]);
+    sscanf(line, "|%16[^|]|%16[^|]|%d | %f | %f | %f | %f | %f | %f |", tmp_nom, tmp_prenom, &tmp_apogee, &tab[0], &tab[1], &tab[2], &tab[3], &tab[4], &tab[5]);
     int i = 0;
-    for ( ; i < MAX_NOTES;++i)
+    for ( ; i < MAX_NOTES;)
     {
         if (-11111.0 == tab[i])
         {
             break;
         }
+        ++i;
     }
     if (0 == i){
         free(tab);
@@ -402,12 +412,7 @@ void sauvgardeNotes(Etudiant etud,FILE *fichierNote){ //!!!
     {
         if (i < etud.nbnotes)
         {
-            if (etud.notes[i] < 10){
-                fprintf(fichierNote, " 0%5.3f |",etud.notes[i]);
-            }
-            else{
-                fprintf(fichierNote, " %05.3f |",etud.notes[i]);
-            }
+            fprintf(fichierNote, " %06.3f |",etud.notes[i]);
         }
         else
         {

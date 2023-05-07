@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "../headers/utilitaires.h"
 #include "../headers/structs.h"
 #include "../headers/consultation.h"

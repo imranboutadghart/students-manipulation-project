@@ -11,6 +11,7 @@
 
 char FICHIERDATA[MAX_CARACTERE];
 char FICHIERNOTES[MAX_CARACTERE];
+
 // Nettoyage de la console
 void ClearConsole(int n){
     for (int i = 0; i < n; i++) {
@@ -21,7 +22,7 @@ void ClearConsole(int n){
             system("clear");
         #endif
 
-        printf("\t\t\t\t\t\tTraitement des donnees saisies... %d/%d\n", i+1,n);
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m Traitement des donnees saisies... %d/%d\n", i+1,n);
         // pauser le programme pour 250 ms
         usleep(250000);
     }
@@ -30,8 +31,7 @@ void ClearConsole(int n){
 
 // Tester l'ouverture du fichier
 short TesterFichier(FILE *fichier){
-    if (fichier == NULL)
-    {
+    if (fichier == NULL){
         Erreur(2);
         exit(0);
     }
@@ -49,19 +49,26 @@ Bool estFichierVide(FILE *fichier){
 
 // Messages d'erreur
 void Erreur(short error) {
-    if (error == 0){printf("+\033[0;31m (-)Erreur: Mal saisie de donnees!\033[0;33m\n"); return;}
-    if (error == 1){printf("+\033[0;31m (-)Erreur: Allocation en memoire a echoué!\033[0;33m\n"); return;}
-    if (error == 2){printf("+\033[0;31m (-)Erreur: Ouverture du fichier a echoué!\033[0;33m\n"); return;}
-    if (error == 3){printf("+\033[0;31m (-)Erreur: Veuillez entrer un choix valable\033[0;32m\n"); return;}
+    if (error == 0){printf("\t\t\t\t\t\t\033[0;36m+\033[0;31m (-)Erreur: Mal saisie de donnees!\033[0;33m\n"); return;}
+    if (error == 1){printf("\t\t\t\t\t\t\033[0;36m+\033[0;31m (-)Erreur: Allocation en memoire a echoué!\033[0;33m\n"); return;}
+    if (error == 2){printf("\t\t\t\t\t\t\033[0;36m+\033[0;31m (-)Erreur: Ouverture du fichier a echoué!\033[0;33m\n"); return;}
+    if (error == 3){printf("\t\t\t\t\t\t\033[0;36m+\033[0;31m (-)Erreur: Veuillez entrer un choix valable\033[0;32m\n"); return;}
+    if (error == 4){printf("\t\t\t\t\t\t\033[0;36m+\033[0;35m (-) Aucun etudiant trouve!\n");}
+    
 }
 
+// Affichage de saisie de valeur personnalisée
+void entrerDonnee(void){
+    printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
+}
 // Lire le nom des deux fichiers a partir de l'utilisateur 
-void LireNomFichiers(FILE **fichier, FILE **fichier_note) {
+void LireNomFichiers(FILE **fichier, FILE **fichier_note){
     char nom_fichier[MAX_CARACTERE];
-    char nom_fichier_note[MAX_CARACTERE];
-    char data_path[MAX_CARACTERE];
+    char nom_fichier_note[MAX_CARACTERE+15];
+    char data_path[MAX_CARACTERE+10];
 
-    printf("\n\t\t\t\t\033[0;33m+- Entrer le nom du fichier dont vous voulez travailler: ");
+    printf("\n\t\t\t\t\t\t\033[0;36m+\033[0;33m Veuillez saisir le nom du fichier sur lequel vous souhaitez travailler: \n");
+    entrerDonnee();
     scanf("%s", nom_fichier);
 
     // Ajouter le préfixe "data/" et le suffixe ".txt" aux noms de fichiers
@@ -80,6 +87,7 @@ void LireNomFichiers(FILE **fichier, FILE **fichier_note) {
     // Sauvegarder les noms complets des fichiers dans les variables globales
     strcpy(FICHIERDATA, data_path);
     strcpy(FICHIERNOTES, nom_fichier_note);
+    ClearConsole(0);
 }
 
 // Afficher le nom de l'app en ASCII Art
@@ -126,61 +134,75 @@ void Lancement(void){
     printf("\t\t\t\t+------------------------------------------------------------------------------------------------+\n");
     sleep(2);
     printf("\t\t\t\t\t\t\t\t\t\033[0;36m-Commencer?(O/N)\n");
-        printf("\t\t\t\t\t\t\t\t\t\033[0;32m=>");
         lireBool(&reponse);
     if (reponse == faux){exit(0);}// Quitter le programme
     ClearConsole(1);
 }
 
-void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,short  taille){
+void MenuPrincipal(Etudiant *tableauEtudiants,FILE **fichier,FILE **fichierNote,short  taille){
     short reponse;
     Bool res;
-    printf("\t==>names:%s\t%s\n",FICHIERDATA,FICHIERNOTES);
-    afficheTabEtudiants(tableauEtudiants,taille);
-    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\n\t\t\t\t\t\t\033[0;36m+-----------------------------\033[1;33mMenu Principal\033[0;36m----------------------------+\n");
     printf("\t\t\t\t\t\t+\033[0;33m Que souhaitez-vous faire ?    \t\t\t\t\t\033[0;36m+\n");
-    printf("\t\t\t\t\t\t+\033[0;33m 1- Ajouter des etudiants dans le fichier.\t\t\t        \033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 2- Modifier les informations d'un etudiant.\t\t\t\t\033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 3- Supprimer un etudiant du fichier.\t\t\t\t\t\033[0;36m+\n \t\t\t\t\t\t+\033[0;33m 4- Rechercher un ou des etudiants par nom ou prenom      \033[0;36m\t\t+\n \t\t\t\t\t\t+\033[0;33m 5- Trier les etudiant selon des criteres specifiques.\033[0;36m\t\t\t+\n\t\t\t\t\t\t+\033[0;33m 6- Quitter l'application.\033[0;36m\t\t\t\t\t\t+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 1- Ajouter des étudiants dans le fichier.\t\t\t        \033[0;36m+\n");
+    printf(" \t\t\t\t\t\t+\033[0;33m 2- Modifier les informations d'un etudiant.\t\t\t\t\033[0;36m+\n");
+    printf("  \t\t\t\t\t\t+\033[0;33m 3- Supprimer un etudiant du fichier.\t\t\t\t\t\033[0;36m+\n");
+    printf("   \t\t\t\t\t\t+\033[0;33m 4- Rechercher un ou des etudiants\t\t\t\033[0;36m\t\t+\n");
+    printf("    \t\t\t\t\t\t+\033[0;33m 5- Trier les etudiant selon des criteres specifiques.\033[0;36m\t\t\t+\n");
+    printf("    \t\t\t\t\t\t+\033[0;33m 6- Quitter l'application.\033[0;36m\t\t\t\t\t\t+\n");
     printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
     do
     {
-        printf("\t\t\t\t\t\t\033[0;36m+\033[0;32m=>");
-        scanf("%hd",&reponse);
-        printf("\033[0;36m");
-        if (reponse < 1 || reponse > 6)
-        {
-            printf("\t\t\t\t\t\t");
-            Erreur(0);
+        entrerDonnee();
+        if (scanf("%hd", &reponse) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+            Erreur(3);
+            while (getchar() != '\n');  // Effacer le tampon d'entrée
+        }
+        if (reponse < 1 || reponse > 6){
+            Erreur(3);
         }
     } while (!(reponse > 0 && reponse <= 6));
     switch (reponse){
     case 1:
+        Etudiant etudiant_;
+        LireEtudiant(&etudiant_,*fichier,*fichierNote);
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Ajouter un autre etudiant ? (O/N)\n");
         do{
-            Etudiant etudiant_;
-            LireEtudiant(&etudiant_,fichier,fichierNote);
-            printf("Ajouter un autre etudiant ? (O/N)\n");
             lireBool(&res);
         } while (res != faux);
         break;
     case 2:
-        editEtudiantFile(tableauEtudiants,&fichier,&fichierNote,taille);
+        editEtudiantFile(tableauEtudiants,fichier,fichierNote,taille);
         break;
     case 3:;
         short num;
-        printf("+ \033[0;33mEntrez le numero de l'etudiant que vous souhaitez supprimer ses informations: \n");
+        printf("\t\t\t\t\t\t\033[0;36m+\033[0;33m Entrez le numero de l'etudiant que vous souhaitez supprimer ses informations: \n");
         do
         {
-            printf("+ \033[0;32m=>");
-            scanf("%hd", &num);
+            entrerDonnee();
+            if (scanf("%hd", &num) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+                Erreur(3);
+                while (getchar() != '\n');  // Effacer le tampon d'entrée
+            }
+            if (num < 1 || num > taille) Erreur(3);
         } while (num <= 0 || num > taille);
-        suprimerEtudiant(&fichier,&fichierNote,tableauEtudiants[num]);
+        suprimerEtudiant(fichier,fichierNote,tableauEtudiants[num-1]);
         break;
     case 4:
-        // RechercheEtudiant_Nom_Prenom(fichier);
+        RechercheEtudiant(tableauEtudiants,taille);
         break;
     case 5:
         unsigned int desTabSize;
         Etudiant *desTab = trierEtudiants(tableauEtudiants,taille,&desTabSize);
-        afficheTabEtudiants(desTab,desTabSize);
+        if ( desTabSize == 0 ){
+            Erreur(4);
+            sleep(3);
+            ClearConsole(0);
+        }
+        else if (desTab == NULL) ClearConsole(0);
+        else{
+            afficheTabEtudiants(desTab,desTabSize);
+        }
         break;
     case 6:
         exit(0);
@@ -190,4 +212,9 @@ void MenuPrincipal(Etudiant *tableauEtudiants,FILE *fichier,FILE *fichierNote,sh
         Erreur(3);
         break;
     }
+    free(tableauEtudiants);
+    unsigned int *NPL = NombrePositionLigne(*fichier);
+    tableauEtudiants = tabEtudiants(*fichier,*fichierNote,NPL);
+    taille = NPL[0] - 2;
+    MenuPrincipal(tableauEtudiants,fichier,fichierNote,taille);
 }

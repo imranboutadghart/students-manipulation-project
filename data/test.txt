@@ -1,9 +1,0 @@
-----------------------------------------------------------------------------------------------------------------------
-| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
-|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
-|Imran           |Bout            |0195202 |  1/Janvier  /2001 |  SMI   |    Doctorat  | Redoublant | Grp2 | 00.000  |
-|Bruh            |Cruuh           |1906461 |  9/Mars     /2005 |  SMA   |    Master    |  Admis(e)  | Grp8 | 15.000  |
-|Aest            |Geest           |2207957 | 12/Decembre /2010 |  SMIA  |    Doctorat  |  Admis(e)  | Grp4 | 15.000  |
-|Smran           |Aout            |4195202 |  1/Janvier  /2004 |  SMI   |    Doctorat  | Redoublant | Grp2 | 00.000  |
-|Druh            |Rruuh           |3906461 |  9/Mars     /2013 |  SMA   |    Master    |  Admis(e)  | Grp8 | 15.000  |
-|Fest            |Teest           |7207957 | 12/Decembre /2012 |  SMIA  |    Doctorat  |  Admis(e)  | Grp4 | 15.000  |

@@ -9,6 +9,7 @@
 #include "../headers/suppression.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 extern void trierTabEtudiantsParNom(Etudiant*, short);
 extern void trierTabEtudiantsParPrenom(Etudiant*, short);

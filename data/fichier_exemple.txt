@@ -1,0 +1,13 @@
+----------------------------------------------------------------------------------------------------------------------
+| Nom            | Prenom         | Apogee | Date d'insciption | Filere |  Formation   | Redoublant | G-TD | Moyenne |
+|----------------|----------------|--------|-------------------|--------|--------------|------------|------|---------|
+|El Amrani       |Fatima Zahra    |2152399 | 15/Fevrier  /2021 |  SMPC  |    License   |  Admis(e)  | Grp2 | 13.625  |
+|Afif            |Mohammed Hassan |2006606 |  3/Juillet  /2020 |  SMC   |    License   |  Admis(e)  | Grp1 | 13.917  |
+|Mansouri        |Youssef         |2254205 | 28/Juillet  /2020 |  SMC   |    License   |  Admis(e)  | Grp1 | 13.917  |
+|Benali          |Salma           |1893681 | 12/Avril    /2018 |  STU   |    License   |  Admis(e)  | Grp1 | 10.875  |
+|Oujda           |Karim           |2026529 |  5/Juin     /2020 |  SV    |    License   |  Admis(e)  | Grp1 | 14.917  |
+|Bouchra         |Leila           |2256072 | 19/Mars     /2022 |  SVTU  |    License   |  Admis(e)  | Grp2 | 12.083  |
+|Fassi           |Hamza           |1853335 |  8/Aout     /2018 |  SVTU  |    Master    |  Admis(e)  | Grp3 | 12.855  |
+|El Khattabi     |Najwa           |1914251 | 16/Janvier  /2019 |  STU   |    Master    |  Admis(e)  | Grp2 | 13.292  |
+|Moussaoui       |Ahmed           |2021217 | 30/Novembre /2020 |  SMIA  |    License   |  Admis(e)  | Grp3 | 10.250  |
+|Test            |Test            |0191860 |  1/Janvier  /2001 |  SV    |    Doctorat  |  Admis(e)  | Grp3 | 00.000  |

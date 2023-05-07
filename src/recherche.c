@@ -48,119 +48,90 @@ void AfficheTabLignes(FILE *file,short *array){
     printf("----------------------------------------------------------------------------------------------------------------------\n");
 }
 
+void RechercheEtudiant(Etudiant *tabEtuds,unsigned int tabSize){
+    short reponse;
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m Que souhaitez-vous chercher ?    \t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t+\033[0;33m 1- chercher par nom et prenom.   \t\t\t\t\t\033[0;36m+\n");
+    printf(" \t\t\t\t\t\t+\033[0;33m 2- chercher par numero apogee.  \t\t\t\t\t\033[0;36m+\n");
+    printf("  \t\t\t\t\t\t+\033[0;33m 3- charcher par annee d'inscription.\t\t\t\t\t\033[0;36m+\n");
+    printf("\t\t\t\t\t\t\033[0;36m+-----------------------------------------------------------------------+\n");
+    do {
+        entrerDonnee();
+        if (scanf("%hd", &reponse) != 1) {  // Lire l'entrée de l'utilisateur sous la forme d'un court
+            Erreur(3);
+            while (getchar() != '\n');  // Effacer le tampon d'entrée
+        }
+        if (reponse < 1 || reponse > 3) Erreur(3);
+    } while (!(reponse > 0 && reponse <= 3));
+    switch (reponse){
+    case 1:
+        chercherNomPrenom(tabEtuds,tabSize);
+        break;
+    case 2:
+        chercherApogee(tabEtuds,tabSize);
+        break;
+    case 3:
+        chercherAnnee(tabEtuds,tabSize);
+        break;
+    default:
+        Erreur(3);
+        break;
+    }
+}
 /* Rechercher les etudiants par noms ou prenoms 
 Elle retourne un tableau dans le premier element est le nombre des element du tableau et chaque element correspand a la position d'une ligne */
-// unsigned int* RechercheEtudiant_Nom_Prenom(FILE *fp){
-//     unsigned int *array = (unsigned int *) malloc(sizeof(unsigned int));
-//     unsigned int *linePositions = NombrePositionLigne(fp),lineCount = 0;
-//     char key[17], src[35], line[MAX_CARACTERE];
-//     printf("\033[0;33m+-------------------------------------------------+\n");
-//     printf("+ Veuillez saisir le nom ou le prenom a chercher: \n");
-//     printf("+ \033[0;32m=>");
-//     scanf("%16s",key);
-//     printf("\033[0;33m");
-//     for (int i = 3; i < linePositions[0]+1; i++)
-//     {
-//         fseek(fp,linePositions[i], SEEK_SET);
-//         fgets(line,MAX_CARACTERE,fp);
-//         strncpy(src, line, 34);
-//         if (strstr(src, key)!=NULL)
-//         {
-//             if (lineCount%5 == 0)
-//             {
-//                 array = realloc(array, (lineCount + 2)*sizeof(unsigned int));
-//             }
-//             ++lineCount;
-//             array[lineCount] = linePositions[i];
-//         }
-//     }
-//     array[0] = lineCount;
-//     free(linePositions);
-//     return array;
-// }
-// // Rechercher les etudiants par la date d'inscription
-// void rechercherEtudiantDate(Etudiant *tabEtudiant, short tabSize, FILE **fichier,FILE **){
-//     int year;
-//     short reponse;
-//     printf("Entrez l'annee a chercher: ");
-//     scanf("%d",&year);
+void chercherNomPrenom(Etudiant *tabEtuds,unsigned int tabSize) {
+    short cmpt = 0;
+    printf("\t\t\t\t\t\t+\033[0;33m veuillez saisir le nom ou prenom a chercher:\n");
+    char *string = (char *)malloc(17*sizeof(char));
+    entrerDonnee();
+    scanf("%s",string);
+    char *stringCap = (char *)malloc(17*sizeof(char));
+    strcpy(stringCap,string);
+    CapitaliserNom(stringCap);
+    for (unsigned int i = 0; i < tabSize; i++){
+        if (strstr(tabEtuds[i].nom,string) || strstr(tabEtuds[i].nom,stringCap) || strstr(tabEtuds[i].prenom,string) || strstr(tabEtuds[i].prenom,stringCap)){
+            AfficheEtudiant(tabEtuds[i]);
+            cmpt++;
+        }
+        
+    }
+    if (cmpt == 0) Erreur(4);
+    free(string);free(stringCap);
+}
+void chercherAnnee(Etudiant *tabEtuds,unsigned int tabSize) {
+    short cmpt = 0;
+    printf("\t\t\t\t\t\t+\033[0;33m veuillez saisir l'annee d'inscription':\n");
+    entrerDonnee();
+    int annee;
+    scanf("%d",&annee);
+    if (50 < annee && 100 > annee)annee+=1900;
+    else if(0<annee && 50 > annee)annee += 2000;
     
+    for (unsigned int i = 0; i < tabSize; i++){
+        if (annee == tabEtuds[i].date_inscription.annee){
+            AfficheEtudiant(tabEtuds[i]);
+            cmpt++;
+        }
+    }
+    if (cmpt == 0) Erreur(4);
+}
+void chercherApogee(Etudiant *tabEtuds,unsigned int tabSize) {
+    short cmpt = 0;
+    printf("\t\t\t\t\t\t+\033[0;33m veuillez saisir l'apogee a chercher:\n");
+    entrerDonnee();
+    int apogee;
+    scanf("%d",&apogee);
+    char sapogee[17],tmpsapogee[17];
+    sprintf(sapogee,"%d",apogee);
+    for (unsigned int i = 0; i < tabSize; i++){
+        sprintf(tmpsapogee,"%d",tabEtuds[i].numApogee);
+        if (strstr(tmpsapogee,sapogee)){
+            AfficheEtudiant(tabEtuds[i]);
+            cmpt++;
+        }
+    }
+    if (cmpt == 0) Erreur(4);
+}
 
-//     printf("Recherche des etudiants inscrits en %d:\n", year);
-//     year %= 100;
-//     int *indexes = (int *)malloc(sizeof(int)), j = 0;//tableau des indexes des etudiants trouvés
-//     // Parcourir le tableau d'etudiants
-//     for(short i = 0; i < tabSize; i++){
-//         // Vérifier si la date d'inscription correspond à la date saisie
-//         if(year == tabEtudiant[i].date_inscription.annee % 100){
-//             indexes[j] = i;
-//             j++;
-//             printf("\033[31m %d: \033[0m",j);
-//             AfficheEtudiant(tabEtudiant[i]);
-//         }
-//         if(0 != j){
-//             printf("Choisir l'operation a effectuer: \n 1- Modifier les inforamations d'un l'etudiant.\n 2- Supprimer un etudiant.\n 3- Choisir une autre date.\n 4- Annuler.\n");
-//             printf("+ \033[0;32m=>");
-//             scanf("%hd", &reponse);
-//             short i = 0;
-//             switch (reponse)
-//             {
-//             case 1:;
-//                 while(i<0 || i>j){
-//                 printf("veuillez choisir l'etudiant a modifier (entre 0 et %d)",j);
-//                 scanf("%hu",&i);}
-//                 EditEtudiant(&tabEtudiant[indexes[i-1]],FICHIERDATA,FICHIERNOTES);
-//                 break;
-//             case 2:;
-//                 while(i<0 || i>j){
-//                 printf("veuillez choisir l'etudiant a suprimer (entre 0 et %d)",j);
-//                 scanf("%hu",&i);}
-//                 suprimerEtudiant(FICHIERDATA,FICHIERNOTES,tabEtudiant[indexes[i-1]]);
-//                 break;
-//             case 3:
-//                 rechercherEtudiantDate(tabEtudiant,tabSize);
-//                 break;
-//             case 4:
-//                 break;
-            
-//             default:
-//                 break;
-//             }
-//         }
-//     }
-//     free(indexes);
-// }
-
-// // Rechercher un etudiant par numero apogee
-// // void rechercheEtudiantApogee(Etudiant *etudiants, short nb_etudiant) {
-// //     short apogee,reponse;
-// //     printf("Entez le numero apogee de l'etudiant a rechercher: \n");
-// //     scanf("%hd",&apogee);
-// //     for (short i = 0; i < nb_etudiant; i++) {
-// //         if (etudiants[i].numApogee == apogee) {
-// //             AfficheEtudiant(etudiants[i]);
-// //             printf("Choisir l'operation a effectuer: \n 1- Modifier les inforamations de l'etudiant.\n 2- Supprimer l'etudiant.\n 3- Entrer un autre numero apgee.\n 4- Annuler.\n");
-// //             do{
-// //                 printf("+ \033[0;32m=>");
-// //                 scanf("%hd", &reponse);
-// //             } while (reponse <= 0 || reponse > 4);
-// //             switch (reponse)
-// //             {
-// //             case 1:
-// //                 EditEtudiant(&etudiants[i],FICHIERDATA,FICHIERNOTES);
-// //                 break;
-// //             case 2:
-// //                 suprimerEtudiant(FICHIERDATA,FICHIERNOTES,etudiants[i]);
-// //                 break;
-// //             case 3:
-// //                 rechercheEtudiantApogee(etudiants,nb_etudiant);
-// //                 break;
-// //             case 4:
-// //                 break;
-            
-// //             default:
-// //                 break;
-// //             }
-// //         }
-// //     }
-// }
