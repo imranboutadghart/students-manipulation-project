@@ -1,4 +1,4 @@
-#EtudGate
+# EtudGate
 [github link](https://github.com/imranboutadghart/students-manipulation-project.git)
 
 EtudGate is a command-line interface (CLI) program designed for storing and managing a database of student information. Written in C programming language, EtudGate uses dynamic memory allocation to reduce memory usage, and it stores data in files located in the DATA folder. Files are named according to user preferences, making it easy to manage multiple classes.
@@ -8,22 +8,20 @@ To run EtudGate, open a terminal and navigate to the directory where the program
 >if any troubles were to be encountered, user may needs to use the make command to recompile the program.
 
 Upon launching EtudGate, the program will prompt you to run it in full-screen mode.
-![](src/intro1.png)
+![first thing program shows](src/intro1.png)
 After you accept, the EtudGate logo and a brief description of its functionalities will appear. You will then be asked to proceed, answering "O" or "o" for yes, and "N" or "n" for no. If you answer with "O" or "o", the program will begin.
-![](src/intro2.png)
+![introduction to the program](src/intro2.png)
 
 The first thing you need to do is type in the file name. The program will detect whether the file already has data in it or not.
 ###    If the file has no data:
-        The program will prompt you to input new student information, which it will then add to the file.
-![](src/writeFileName1.jpg)
-
-###        The program will then move on to the main menu.
-    If the file already has students in it:
+        The program will prompt you to input new student information, which it will then add to the file, and will keep asking whether user wants to add new students, when complete,The program will then move on to the main menu.
+![entering a file name that doesn't exist](src/writeFileName1.jpg)
+###    If the file already has students in it:
         The program will display the main menu.
-![](src/writeFileName1.jpg)
+![entering a file name that does exist](src/writeFileName1.jpg)
 
 
-##Main Menu
+## Main Menu
 
 The main menu contains six options, with the last option allowing you to exit the program.
 
@@ -57,12 +55,12 @@ The main menu contains six options, with the last option allowing you to exit th
 
 ###    ->Exit the program: This option allows you to exit the program.
 
-##Contributing
+## Contributing
 
 Contributions to EtudGate are welcome and can take many forms, such as reporting bugs, providing feedback, updating information from the readme, etc...
 every contribution would be very helpful, but if it was a critical contribution you may end up being added to the credits part
 
-##Credits:
+## Credits:
     Credits are to be given to all those who contributed to EtudGate in any form, but above all else, the programmers who contributed the most to EtudGate are:
         ***youssef ait boudderoub***
         ***imran boutadghart***
