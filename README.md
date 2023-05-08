@@ -1,4 +1,5 @@
-#[EtudGate](github.com)
+#EtudGate
+[github link](https://github.com/imranboutadghart/students-manipulation-project.git)
 
 EtudGate is a command-line interface (CLI) program designed for storing and managing a database of student information. Written in C programming language, EtudGate uses dynamic memory allocation to reduce memory usage, and it stores data in files located in the DATA folder. Files are named according to user preferences, making it easy to manage multiple classes.
 Getting Started
