@@ -1,4 +1,4 @@
-# EtudGate
+la# EtudGate
 [github link](https://github.com/imranboutadghart/students-manipulation-project.git)
 
 EtudGate is a command-line interface (CLI) program designed for storing and managing a database of student information. Written in C programming language, EtudGate uses dynamic memory allocation to reduce memory usage, and it stores data in files located in the DATA folder. Files are named according to user preferences, making it easy to manage multiple classes.
@@ -62,6 +62,6 @@ every contribution would be very helpful, but if it was a critical contribution 
 
 ## Credits:
     Credits are to be given to all those who contributed to EtudGate in any form, but above all else, the programmers who contributed the most to EtudGate are:
-        ***youssef ait boudderoub***
+        ***youssef aitbouddroub***
         ***imran boutadghart***
     speciall thanks to our professor ***Rachida Hannane***
